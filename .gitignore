@@ -10,13 +10,13 @@ local.properties
 .settings/
 .loadpath
 
-.project
+
 sysProps.xml
 
 .externalToolBuilders/
 
 *.launch
 
-.cproject
+
 
 src/Hardware.h
