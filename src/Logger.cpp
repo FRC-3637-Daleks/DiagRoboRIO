@@ -1,54 +1,41 @@
+#include <sys/stat.h>
 #include "Logger.h"
 
 /********* STATIC LOGGER DATA MEMBERS *************/
 
 shared_ptr<LogService> Logger::service = nullptr;
 string Logger::path;
+LogPreferences Logger::preferences;
 
 std::function<LogService *()> Logger::factory = []()
 {
-	return new FileLogger(Logger::GetFullPath()+LOG_STATE_OUT_FILE_NAME, Logger::GetMakeDirCommand());
+	return new FileLogger(Logger::GetFullPath()+Logger::GetPreferences().text_log_filename,
+							Logger::GetMakeDirCommand(),
+							Logger::GetPreferences().log_period,
+							Logger::GetPreferences().n_buffer_frames);
 };
 
 /********** STATIC LOGGER CONSTANTS *****************/
-/*
-const char* SERVICE::text[] = {
-		"GENERAL", "POWER", "SENSORS", "MOTORS", "PNEUMATICS"
-};
-*/
 
 const char* LEVEL_t::text[] = {
 		"EMER", "ALERT", "CRIT", "ERR", "WARN", "NOTICE", "INFO", "DEBUG"
 };
-
-const char* SUBSYSTEM::text[] = {
-		"TEST"
-};
-
-
-/*
-const int Logger::LogFrame()
-{
-	return GetInstance().LogAll();
-}
-*/
 
 
 /******** STATIC LOGGER GET FUNCTIONS **********/
 
 const string Logger::GetLogPath()
 {
-	return string(LOG_HOME);
+	struct stat info;
+	if(stat(preferences.log_home_path, &info) < 0)
+	{
+		mkdir(preferences.log_home_path,  S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+	}
+	return string(preferences.log_home_path);
 }
 
 const string Logger::GetRunTimeDirectory()
 {
-	/*auto t = time(0);
-	auto tm = localtime(&t);
-	char buf[32] = "";
-	strftime(buf, 32, "%F_%X", tm);
-	return string(buf);
-	*/
 	using std::ios_base;
 	static string runTimeID;
 	if(runTimeID.empty())

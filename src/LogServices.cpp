@@ -9,6 +9,7 @@
 
 void DataService::LoggingThread(DataService * const ls)
 {
+
 	if(ls == nullptr)
 	{
 		return;
@@ -133,7 +134,7 @@ ostream& LogService::logStderr()
 	return oldCerr<<currentFrameTime()<<": ";
 }
 
-FileLogger::FileLogger(const string &file, const string &command): LogService(false, FILE_LOGGING_PERIOD), writer(0)
+FileLogger::FileLogger(const string &file, const string &command, const MILLISECONDS flp, const unsigned int f): LogService(false, flp, true, f), writer(0)
 {
 	createLogDir(command);
 	stateOut.open(file, std::ios_base::out);

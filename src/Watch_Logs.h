@@ -9,7 +9,6 @@
 #ifndef SRC_WATCH_LOGS_H_
 #define SRC_WATCH_LOGS_H_
 
-#include "WPILib.h"
 #include "Loggable.h"
 
 template<typename DATA_TYPE>

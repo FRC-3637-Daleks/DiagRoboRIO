@@ -12,9 +12,10 @@
 #include <thread>
 #include <ctime>
 
-#include "Config.h"
+#include "Defaults.h"
 #include "Loggable.h"
 #include "Watch_Logs.h"
+#include "LogPreferences.h"
 
 using std::vector;
 using std::thread;
@@ -75,7 +76,7 @@ private:
 	unsigned int frames;
 
 public:
-	LogService(const bool start=false, const unsigned int period=0, const bool hijackSTDOUT=true, const unsigned int f=DEFAULT_BUFFER_FRAMES);
+	LogService(const bool start=false, const unsigned int period=0, const bool hijackSTDOUT=true, const unsigned int f=1);
 	virtual ~LogService();
 
 protected:
@@ -131,7 +132,7 @@ private:
 	short writer;
 
 public:
-	FileLogger(const string &file, const string &command);
+	FileLogger(const string &file, const string &command, const MILLISECONDS flp, const unsigned int f);
 	virtual ~FileLogger();
 
 public:
