@@ -16,14 +16,15 @@ void DataService::LoggingThread(DataService * const ls)
 	}
 	while(ls->getThreadState() == LogService::THREAD_STATE_INIT);
 	int failed = 0;
-	clock_t c = 0;
+	//clock_t c = 0;
 	while(ls->getThreadState() == THREAD_STATE_RUNNING && failed >= 0)
 	{
-		if(clock() - c >= (int)ls->getLogPeriod()*CLOCKS_PER_SEC/1000)
-		{
+		//if(clock() - c >= (int)ls->getLogPeriod()*CLOCKS_PER_SEC/1000)
+		//{
 			failed = ls->LogAll();
-			c = clock();
-		}
+		//	c = clock();
+		//}
+		std::this_thread::sleep_for(std::chrono::milliseconds(ls->getLogPeriod()));
 	}
     ls->LogAllCurrent();
     if(ls->getThreadState() == THREAD_STATE_RUNNING)
