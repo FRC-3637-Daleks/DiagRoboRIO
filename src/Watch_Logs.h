@@ -47,6 +47,12 @@ inline typename ValueLog<bool>::LOG_EXTENSION_t AddSmartDashExtension<bool>(cons
 	};
 }
 
+template<>
+inline typename ValueLog<float>::LOG_EXTENSION_t AddSmartDashExtension<float>(const string key, typename ValueLog<float>::LOG_EXTENSION_t ext)
+{
+	return AddSmartDashExtension<double>(key, ext);
+}
+
 template<typename DATA_TYPE>
 class WatchLog
 {
