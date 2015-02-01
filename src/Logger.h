@@ -11,18 +11,17 @@
 #include <memory>
 #include <iostream>
 
-#include "Config.h"
+#include "LogPreferences.h"
+#include "Defaults.h"
 #include "LogServices.h"
 
 using std::shared_ptr;
 
-/*
-class SERVICE_t {
+class LEVEL_t {
 public:
-	enum {GENERAL=0, POWER, SENSORS, MOTORS, PNEUMATICS};
+	enum {EMER=0, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG};
 	static const char* text[];
 };
-*/
 
 
 class Logger {
@@ -30,6 +29,11 @@ private:
 	static shared_ptr<LogService> service;
 	static std::function<LogService * ()> factory;
 	static string path;
+	static LogPreferences preferences;
+
+public:
+	static const LogPreferences& GetPreferences() {return preferences;};
+	static void SetPreferences(const LogPreferences& prefs) {preferences = prefs;};
 
 public:
 	static const string GetLogPath();
@@ -69,18 +73,6 @@ public:
 public:
 	static const int LogState(const char * const SERV, const int LEV, const string &text) {return LogState(SERV, LEV, text.c_str());};
 	static const int LogState(const char * const SERV, const int LEV, const char * const text);
-
-	template<typename DATA_TYPE>
-	static typename ValueLog<DATA_TYPE>::FUNC_t MakeLogValue(const int SUBS, const char * const COMP, std::function<DATA_TYPE(void)> fn, const typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway)
-	{
-		return MakeLogValue(SUBSYSTEM::text[SUBS], COMP, fn, ext);
-	}
-
-	template<typename DATA_TYPE, class SUB_TYPE>
-	static typename ValueLog<DATA_TYPE>::FUNC_t MakeLogValue(const int SUBS, const char * const COMP, SUB_TYPE *obj, DATA_TYPE (SUB_TYPE::* fn)(), const typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway)
-	{
-		return MakeLogValue<DATA_TYPE, SUB_TYPE>(SUBSYSTEM::text[SUBS], COMP, obj, fn, ext);
-	}
 
 	template<typename DATA_TYPE, class SUB_TYPE>
 	static typename ValueLog<DATA_TYPE>::FUNC_t MakeLogValue(const char * const COMP, SUB_TYPE *obj, DATA_TYPE (SUB_TYPE::* fn)(), const typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway)

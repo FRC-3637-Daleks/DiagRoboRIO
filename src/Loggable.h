@@ -13,7 +13,9 @@
 #include <vector>
 #include <fstream>
 
-#include "Config.h"
+#include "WPILib.h"
+
+#include "Defaults.h"
 
 using std::string;
 using std::ostream;
