@@ -9,7 +9,8 @@
 #ifndef SRC_WATCH_LOGS_H_
 #define SRC_WATCH_LOGS_H_
 
-#include "Loggable.h"
+#include <sstream>
+#include "ValueLog.h"
 
 template<typename DATA_TYPE>
 typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t AddSmartDashExtension(const string key, typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway)
