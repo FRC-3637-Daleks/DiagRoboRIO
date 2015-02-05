@@ -8,7 +8,7 @@
 #ifndef SRC_MOSQUITTO_H_
 #define SRC_MOSQUITTO_H_
 
-//#include "client_shared.h"
+#include "mosquitto/client_shared.h"
 
 
 #endif /* SRC_MOSQUITTO_H_ */
