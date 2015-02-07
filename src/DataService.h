@@ -47,6 +47,13 @@ public:
 		return ret;
 	};
 
+	static const DS_HANDLER Create(const bool start=false, const unsigned int period=0)
+	{
+		DS_HANDLER ret(new DataService(start, period));
+		ret->initThread(ret);
+		return ret;
+	}
+
 private:
 	vector<shared_ptr<Loggable>> logObjects;
 	thread logThread;

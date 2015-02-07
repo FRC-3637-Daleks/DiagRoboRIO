@@ -7,9 +7,9 @@ shared_ptr<LogService> Logger::service = nullptr;
 string Logger::path;
 LogPreferences Logger::preferences;
 
-std::function<LogService *()> Logger::factory = []()
+std::function<shared_ptr<LogService>()> Logger::factory = []()
 {
-	return new FileLogger(Logger::GetFullPath()+Logger::GetPreferences().text_log_filename,
+	return FileLogger::Create(Logger::GetFullPath()+Logger::GetPreferences().text_log_filename,
 							Logger::GetMakeDirCommand(),
 							Logger::GetPreferences().log_period,
 							Logger::GetPreferences().n_buffer_frames);
@@ -94,12 +94,12 @@ const string Logger::MakeLogFileName(const string &SUBS, const string &COMP, con
 LogService &Logger::GetInstance()
 {
 	if(service == nullptr)
-		service = shared_ptr<LogService>(factory());
+		service = factory();
 	return *service;
 }
 
 // Takes in Service, level, and state of a part of a robot and stores it in 'data'
-const int Logger::LogState(const char * const SERV, const int LEV, const char * text) {
+const int Logger::LogState(const char * const SERV, const int LEV, const string& text) {
 	GetInstance().logText()<<"["<<SERV<<"]["<<LEVEL_t::text[LEV]<<"] "<<text<<std::endl;
 #ifndef DEBUG_MODE
 	if(LEV != LEVEL_t::INFO)
