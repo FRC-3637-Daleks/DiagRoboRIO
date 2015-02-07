@@ -32,6 +32,10 @@ public:
 	const int Log() override
 	{
 		const int ret = ValueLog<DATA_TYPE>::Log();
+		if(ret == 1)
+		{
+			return logCurrent(true);
+		}
 
 		buf.push_back(ValueLog<DATA_TYPE>::getPrev());
 		if(buf.size() == flushFrames)
@@ -40,8 +44,10 @@ public:
 		return ret;
 	}
 
+	virtual const int logCurrent() override {return logCurrent(false);};
+
 	/// Logs the current buffer immediately
-	virtual const int logCurrent() override
+	const int logCurrent(const bool logFail)
 	{
 		if(buf.size() == 0)
 		    return 0;
@@ -50,6 +56,11 @@ public:
 			out<<*i<<std::endl;
 		}
 		buf.clear();
+		if(logFail)
+		{
+			out<<"ERR_YOUR_CALLBACK_FUCKED_YOU"<<std::endl;
+			return 1;
+		}
 		out.flush();  // Ensures output stream is writing to file
 		return 0;
 	}
