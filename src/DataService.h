@@ -39,7 +39,13 @@ private:
 	static void DataThread(DS_HANDLER ds);
 
 public:
-	static const DS_HANDLER Create(std::function<DataService * ()> factory);
+	template<class DATA_SERVICE_CHILD>
+	static const shared_ptr<DATA_SERVICE_CHILD> Create(std::function<DATA_SERVICE_CHILD * ()> factory)
+	{
+		shared_ptr<DATA_SERVICE_CHILD> ret(factory());
+		ret->initThread(ret);
+		return ret;
+	};
 
 private:
 	vector<shared_ptr<Loggable>> logObjects;
@@ -70,7 +76,6 @@ private:
     void initThread(const DS_HANDLER& self);
 
 protected:
-    const char getThreadState() const {return threadState;};
     void setThreadState(const short state) {if(logThread.joinable()) threadState = state;};  /// Changes safe thread state
     void runThread() {setThreadState(THREAD_STATE_RUNNING);};	   /// Allows thread to start running
     void stopThread() {setThreadState(THREAD_STATE_TERMINATE);};   /// Safely changes thread state to stop running

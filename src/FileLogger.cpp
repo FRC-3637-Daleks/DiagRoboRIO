@@ -7,11 +7,23 @@
 
 #include "FileLogger.h"
 
-FileLogger::FileLogger(const string &file, const string &command, const MILLISECONDS flp, const unsigned int f): LogService(false, flp, true, f), writer(0)
+FileLogger::FileLogger(const string &file, const string &command, const MILLISECONDS flp, const unsigned int f): LogService(false, flp, true, f), stateOut(shared_ptr<ofstream>(new ofstream)), writer(0)
 {
 	createLogDir(command);
-	stateOut.open(file, std::ios_base::out);
+	stateOut->open(file, std::ios_base::out);
     runThread();
+}
+
+FileLogger::FileLogger(const FileLogger& other): LogService(other),
+		outStreams(other.outStreams), stateOut(other.stateOut), writer(other.writer)
+{
+	doubleBuffer[0].str(other.doubleBuffer[0].str());
+	doubleBuffer[1].str(other.doubleBuffer[1].str());
+}
+
+const DataService::DS_HANDLER FileLogger::emergencyClone() const
+{
+	return DataService::Create<FileLogger>([this](){return new FileLogger(*this);});
 }
 
 FileLogger::~FileLogger()
@@ -19,17 +31,17 @@ FileLogger::~FileLogger()
     logText()<<"[FILELOGGER][INFO] Closing file output streams"<<endl;
     logText()<<"[FILELOGGER][INFO] Deleting LogService"<<endl;
     joinThread();
-	for(auto i = outStreams.begin(); i != outStreams.end(); i++)
+	/*for(auto i = outStreams.begin(); i != outStreams.end(); i++)
 	{
 		delete *i;
-	}
+	}*/
 	outStreams.clear();
     logCurrent();
 }
 
 ofstream& FileLogger::makeLogStream(const string &file)
 {
-	outStreams.push_back(new ofstream(file, std::ios_base::out));
+	outStreams.push_back(shared_ptr<ofstream>(new ofstream(file, std::ios_base::out)));
 	return *outStreams.back();
 }
 
@@ -70,9 +82,9 @@ const int FileLogger::logCurrent()
     else if(writer == 1) writer = 0;
     if(doubleBuffer[prev].rdbuf()->in_avail() > 0)
     {
-        doubleBuffer[prev]>>stateOut.rdbuf();
+        doubleBuffer[prev]>>stateOut->rdbuf();
     }
-	stateOut.flush();
+	stateOut->flush();
 	return 0;
 }
 

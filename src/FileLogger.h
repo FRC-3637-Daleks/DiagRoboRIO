@@ -12,14 +12,21 @@
 
 class FileLogger: public LogService
 {
+public:
+	typedef shared_ptr<FileLogger> FS_HANDLER;
+
 private:
-	vector<ofstream*> outStreams;
-	ofstream stateOut;
+	vector<shared_ptr<ofstream> > outStreams;
+	shared_ptr<ofstream> stateOut;
 	stringstream doubleBuffer[2];
 	short writer;
 
-public:
+protected:
 	FileLogger(const string &file, const string &command, const MILLISECONDS flp, const unsigned int f);
+	FileLogger(const FileLogger& other);
+
+public:
+	virtual const DS_HANDLER emergencyClone() const override;
 	virtual ~FileLogger();
 
 public:

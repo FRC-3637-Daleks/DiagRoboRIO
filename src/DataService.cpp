@@ -7,13 +7,6 @@
 
 #include "DataService.h"
 
-const DataService::DS_HANDLER DataService::Create(std::function<DataService *()> factory)
-{
-	DS_HANDLER ret(factory());
-	ret->initThread(ret);
-	return ret;
-}
-
 void DataService::DataThread(DataService::DS_HANDLER ds)
 {
 	if(ds == nullptr)
@@ -78,7 +71,7 @@ const int DataService::LogAllCurrent()
 
 void DataService::initThread(const DataService::DS_HANDLER& self)
 {
-	if(self != this)
+	if(self.get() != this)
 		return;
 
 	logThread = thread(&DataService::DataThread, self);
@@ -105,6 +98,6 @@ const bool DataService::exceedsTimeout(unsigned int microseconds)
 
 const DataService::DS_HANDLER DataService::emergencyClone() const
 {
-	return Create(new DataService(*this));
+	return Create<DataService>([this]() {return new DataService(*this);});
 }
 
