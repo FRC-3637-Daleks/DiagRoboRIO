@@ -8,7 +8,7 @@
 
 #define FRAME_TEXT_WIDTH 7
 #define FLOATING_POINT_SIG_FIGS 8
-#define DEFAULT_LOG_PERIOD 50 	//milliseconds
+#define DEFAULT_LOG_PERIOD 75 	//milliseconds
 #define DEFAULT_NET_PERIOD 300	//milliseconds
 #define DEFAULT_MONITOR_PERIOD 10   // milliseconds
 
