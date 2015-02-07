@@ -11,7 +11,6 @@ FileLogger::FileLogger(const string &file, const string &command, const MILLISEC
 {
 	createLogDir(command);
 	stateOut->open(file, std::ios_base::out);
-    runThread();
 }
 
 FileLogger::FileLogger(const FileLogger& other): LogService(other),

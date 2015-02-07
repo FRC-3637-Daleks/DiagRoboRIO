@@ -30,7 +30,7 @@ public:
 class Logger {
 private:
 	static shared_ptr<LogService> service;
-	static std::function<LogService * ()> factory;
+	static std::function<shared_ptr<LogService>()> factory;
 	static string path;
 	static LogPreferences preferences;
 
@@ -54,6 +54,9 @@ private:
 	static LogService &GetInstance();
 
 public:
+	static void StartLogging() {GetInstance().startLogging();};
+
+
 	template<class DATA_TYPE>
 	static typename ValueLog<DATA_TYPE>::FUNC_t MakeLogValue(const char * SUBS, const char * COMP, DATA_TYPE (*fn)(), const typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway) {
 		return MakeLogValue(SUBS, COMP, std::function<DATA_TYPE(void)>(fn), ext);
@@ -71,11 +74,11 @@ public:
 
 public:
 	/// This should be called before any other function of Logger is called.
-	static void SetFactoryFunction(std::function<LogService * ()> fact) {factory = fact;};
+	static void SetFactoryFunction(std::function<shared_ptr<LogService>()> fact) {factory = fact;};
 
 public:
-	static const int LogState(const char * const SERV, const int LEV, const string &text) {return LogState(SERV, LEV, text.c_str());};
-	static const int LogState(const char * const SERV, const int LEV, const char * const text);
+	static const int LogState(const char * const SERV, const int LEV, const string &text);
+	static const int LogState(const char * const SERV, const int LEV, const char * const text) {return LogState(SERV, LEV, string(text));}
 
 	template<typename DATA_TYPE, class SUB_TYPE>
 	static typename ValueLog<DATA_TYPE>::FUNC_t MakeLogValue(const char * const COMP, SUB_TYPE *obj, DATA_TYPE (SUB_TYPE::* fn)(), const typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway)
@@ -90,6 +93,20 @@ public:
 	static typename ValueLog<DATA_TYPE>::FUNC_t MakeLogValue(const int COMP, SUB_TYPE *obj, DATA_TYPE (SUB_TYPE::* fn)(), const typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway)
 	{
 		return MakeLogValue(SUB_TYPE::GetComponentName(COMP), obj, fn, ext);
+	}
+
+private:
+	string name;
+
+protected:
+	Logger(): name(typeid(this).name()) {};
+
+	const int LogState(const int LEV, const string &text) {return LogState(name.c_str(), LEV, text);};
+
+	template<typename DATA_TYPE>
+	typename ValueLog<DATA_TYPE>::FUNC_t MakeLogValue(const char * const COMP, std::function<DATA_TYPE(void)> fn, const typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway)
+	{
+		return MakeLogValue(name.c_str(), COMP, fn, ext);
 	}
 
 };

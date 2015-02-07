@@ -14,6 +14,10 @@ class FileLogger: public LogService
 {
 public:
 	typedef shared_ptr<FileLogger> FS_HANDLER;
+	static const FS_HANDLER Create(const string &file, const string &command, const MILLISECONDS flp, const unsigned int f)
+	{
+		return DataService::Create<FileLogger>([file, command, flp, f]() {return new FileLogger(file, command, flp, f);});
+	}
 
 private:
 	vector<shared_ptr<ofstream> > outStreams;
