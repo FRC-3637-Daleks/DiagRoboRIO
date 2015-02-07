@@ -78,8 +78,9 @@ public:
 	static typename ValueLog<DATA_TYPE>::FUNC_t MakeLogValue(const char * const COMP, SUB_TYPE *obj, DATA_TYPE (SUB_TYPE::* fn)(), const typename ValueLog<DATA_TYPE>::LOG_EXTENSION_t ext=ValueLog<DATA_TYPE>::continueAnyway)
 	{
 		string str(typeid(SUB_TYPE).name());
-		//for(auto i = str.begin(); i != str.end(); i++) *i = toupper(*i);   // Makes name upper case
-		return MakeLogValue(str.substr(2).c_str(), COMP, obj, fn, ext);
+		int i = 0;
+		for(auto i = 0; !(str[i] <= 'z' && str[i] >= 'a' || str[i] <= 'Z' && str[i] >= 'A'); i++);   // Unobfuscates name
+		return MakeLogValue(str.substr(i).c_str(), COMP, obj, fn, ext);
 	}
 
 	/// The subsystem used must have a static function GetComponenentName which returns a c-string based on a id
