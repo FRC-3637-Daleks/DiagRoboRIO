@@ -29,10 +29,21 @@ public:
 
 class Logger {
 private:
+	enum {THREAD_STATE_INIT, THREAD_STATE_RUNNING, THREAD_STATE_TERMINATE};
+
+private:
 	static shared_ptr<LogService> service;
 	static std::function<shared_ptr<LogService>()> factory;
 	static string path;
 	static LogPreferences preferences;
+
+private:
+	static int threadState;
+	static std::thread monitorThread;
+
+private:
+	static void MonitorThread();
+	static const int GetThreadState() {return threadState;};
 
 public:
 	static const LogPreferences& GetPreferences() {return preferences;};
@@ -52,9 +63,10 @@ public:
 
 private:
 	static LogService &GetInstance();
+	static void RestartService();   ///< Detaches old service and starts new one with same data
 
 public:
-	static void StartLogging() {GetInstance().startLogging();};
+	static void StartLogging() {threadState = THREAD_STATE_RUNNING;};
 
 
 	template<class DATA_TYPE>

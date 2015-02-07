@@ -33,7 +33,7 @@ protected:  // Must ensure dynamic allocation through factory functions
 
 public:
 	virtual ~LogService();
-	virtual const DS_HANDLER emergencyClone() const=0;
+	virtual const DS_HANDLER emergencyClone()=0;
 
 protected:
 	virtual ostream& makeLogStream(const string &file)=0;

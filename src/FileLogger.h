@@ -30,7 +30,7 @@ protected:
 	FileLogger(const FileLogger& other);
 
 public:
-	virtual const DS_HANDLER emergencyClone() const override;
+	virtual const DS_HANDLER emergencyClone() override;
 	virtual ~FileLogger();
 
 public:

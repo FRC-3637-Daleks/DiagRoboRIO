@@ -101,7 +101,7 @@ public:
     const short getThreadState() const {return threadState;};
     const bool exceedsTimeout(unsigned int microseconds=0);   /// Returns true if a timeout has been exceeded in a state of logging. 0 indicates to use default timeout
     const int getCurrentIteration() const {return logIter;};
-    virtual const DS_HANDLER emergencyClone() const;		/// Clones the DataService with all log objects except for the fail-point
+    virtual const DS_HANDLER emergencyClone();		/// Clones the DataService with all log objects except for the fail-point
 };
 
 

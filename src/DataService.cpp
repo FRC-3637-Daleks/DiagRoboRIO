@@ -24,7 +24,6 @@ void DataService::DataThread(DataService::DS_HANDLER ds)
 		if(clock() - c > ds->getLogPeriod()*CLOCKS_PER_SEC/1000)
 			std::this_thread::sleep_for(std::chrono::milliseconds(ds->getLogPeriod() - (clock()-c)*1000/CLOCKS_PER_SEC));
 	}
-    ds->LogAllCurrent();
     if(ds->getThreadState() == THREAD_STATE_RUNNING)
     	; // In which the logger quit due to a callback function returning KILL
 }
@@ -93,11 +92,13 @@ const bool DataService::exceedsTimeout(unsigned int microseconds)
 		microseconds = getLogPeriod()*1000/logObjects.size();
 
 
-	return time*1000*1000/CLOCKS_PER_SEC > microseconds;
+	return (clock()-time)*1000*1000/CLOCKS_PER_SEC > microseconds;
 }
 
-const DataService::DS_HANDLER DataService::emergencyClone() const
+const DataService::DS_HANDLER DataService::emergencyClone()
 {
-	return Create<DataService>([this]() {return new DataService(*this);});
+	auto ret = Create<DataService>([this]() {return new DataService(*this);});
+	killThread();
+	return ret;
 }
 

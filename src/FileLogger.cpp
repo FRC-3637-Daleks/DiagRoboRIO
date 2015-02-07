@@ -20,14 +20,18 @@ FileLogger::FileLogger(const FileLogger& other): LogService(other),
 	doubleBuffer[1].str(other.doubleBuffer[1].str());
 }
 
-const DataService::DS_HANDLER FileLogger::emergencyClone() const
+const DataService::DS_HANDLER FileLogger::emergencyClone()
 {
-	return DataService::Create<FileLogger>([this](){return new FileLogger(*this);});
+	auto ret = DataService::Create<FileLogger>([this](){return new FileLogger(*this);});
+	killThread();
+	return ret;
 }
 
 FileLogger::~FileLogger()
 {
-    logText()<<"[FILELOGGER][INFO] Closing file output streams"<<endl;
+	if(outStreams.begin() != outStreams.end())
+		if(outStreams[0].use_count() == 1)
+			logText()<<"[FILELOGGER][INFO] Closing file output streams"<<endl;
     logText()<<"[FILELOGGER][INFO] Deleting LogService"<<endl;
     joinThread();
 	/*for(auto i = outStreams.begin(); i != outStreams.end(); i++)
@@ -82,6 +86,7 @@ const int FileLogger::logCurrent()
     if(doubleBuffer[prev].rdbuf()->in_avail() > 0)
     {
         doubleBuffer[prev]>>stateOut->rdbuf();
+        doubleBuffer[prev].str("");    // Empties buffer
     }
 	stateOut->flush();
 	return 0;
