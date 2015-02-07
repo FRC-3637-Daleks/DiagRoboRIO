@@ -14,6 +14,8 @@
 #include "LogPreferences.h"
 #include "Defaults.h"
 #include "LogServices.h"
+#include "FileLogger.h"
+#include "DataService.h"
 
 using std::shared_ptr;
 
