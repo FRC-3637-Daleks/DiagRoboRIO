@@ -63,10 +63,10 @@ const int LogService::logCurrent()
 		char buf[255];
 		while(!cerrRedirect.eof())
 		{
-			coutRedirect.getline(buf, 255);
+			cerrRedirect.getline(buf, 255);
 			logText()<<"[STDERR][ERR] "<<buf<<std::endl;
 		}
-		coutRedirect.clear();
+		cerrRedirect.clear();
 	}
 
 	return 0;

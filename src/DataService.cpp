@@ -21,7 +21,7 @@ void DataService::DataThread(DataService::DS_HANDLER ds)
 		failed = ds->LogAll();
 
 		// Ensures logger keeps to schedule
-		if(clock() - c > ds->getLogPeriod()*CLOCKS_PER_SEC/1000)
+		if(clock() - c < ds->getLogPeriod()*CLOCKS_PER_SEC/1000)
 			std::this_thread::sleep_for(std::chrono::milliseconds(ds->getLogPeriod() - (clock()-c)*1000/CLOCKS_PER_SEC));
 	}
     if(ds->getThreadState() == THREAD_STATE_RUNNING)
@@ -62,8 +62,12 @@ const int DataService::LogAll()
 const int DataService::LogAllCurrent()
 {
 	int ret = 0;
+	feedTimeout();
 	for(unsigned int i = 0; i < logObjects.size() && ret >= 0; i++)
+	{
 		ret |= logObjects[i]->logCurrent();
+		feedTimeout();
+	}
 
 	return ret;
 }
@@ -83,16 +87,19 @@ void DataService::killThread()
 }
 
 
-const bool DataService::exceedsTimeout(unsigned int microseconds)
+const int DataService::exceedsTimeout(unsigned int microseconds)
 {
 	if(logIter < 0)  // Not in the midst of logging, no chance of blocking, no need for time out
-		return false;
+		return -1;
 
 	if(microseconds == 0) // Default case
 		microseconds = getLogPeriod()*1000/logObjects.size();
 
 
-	return (clock()-time)*1000*1000/CLOCKS_PER_SEC > microseconds;
+	if((clock()-time)*1000*1000/CLOCKS_PER_SEC > microseconds)
+		return logIter;
+	else
+		return -1;
 }
 
 const DataService::DS_HANDLER DataService::emergencyClone()

@@ -124,12 +124,12 @@ void Logger::MonitorThread()
 	GetInstance().startLogging();
 
 	int failed = 0;
+	int iter = -1;
 
 	while(GetThreadState() == THREAD_STATE_RUNNING && failed >= 0)
 	{
-		if(GetInstance().exceedsTimeout())
+		if((iter = GetInstance().exceedsTimeout()) >= 0)
 		{
-			int iter = GetInstance().getCurrentIteration();	// Fail Point
 			stringstream ss;
 			ss<<"Log of object #"<<iter<<" exceeded timeout";
 			LogState("Logger", LEVEL_t::CRIT, ss.str());
@@ -146,9 +146,7 @@ void Logger::MonitorThread()
 // Takes in Service, level, and state of a part of a robot and stores it in 'data'
 const int Logger::LogState(const char * const SERV, const int LEV, const string& text) {
 	GetInstance().logText()<<"["<<SERV<<"]["<<LEVEL_t::text[LEV]<<"] "<<text<<std::endl;
-#ifndef DEBUG_MODE
 	if(LEV != LEVEL_t::INFO)
-#endif
 		GetInstance().logStdout()<<"["<<SERV<<"] "<<text<<std::endl;
 	return 0;
 }

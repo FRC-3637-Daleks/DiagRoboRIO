@@ -65,7 +65,7 @@ private:
 protected:  // Ensures dynamic allocation of DataServices
 	DataService(const bool start=false, const unsigned int period=0): logThread(),
 		threadState(start? THREAD_STATE_RUNNING:THREAD_STATE_INIT),
-		logPeriodMils(period), time(0), logIter(0) {};
+		logPeriodMils(period), time(clock()), logIter(-1) {};
 
 	DataService(const DataService& other);   /// Called by emergencyClone
 
@@ -99,7 +99,7 @@ public:
 public:
     const unsigned int getLogPeriod() const {return logPeriodMils;};
     const short getThreadState() const {return threadState;};
-    const bool exceedsTimeout(unsigned int microseconds=0);   /// Returns true if a timeout has been exceeded in a state of logging. 0 indicates to use default timeout
+    const int exceedsTimeout(unsigned int microseconds=0);   /// Returns positive id of a log object if a timeout has been exceeded in a state of logging. 0 indicates to use default timeout
     const int getCurrentIteration() const {return logIter;};
     virtual const DS_HANDLER emergencyClone();		/// Clones the DataService with all log objects except for the fail-point
 };

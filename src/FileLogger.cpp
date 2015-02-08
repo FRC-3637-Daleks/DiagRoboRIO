@@ -34,11 +34,8 @@ FileLogger::~FileLogger()
 			logText()<<"[FILELOGGER][INFO] Closing file output streams"<<endl;
     logText()<<"[FILELOGGER][INFO] Deleting LogService"<<endl;
     joinThread();
-	/*for(auto i = outStreams.begin(); i != outStreams.end(); i++)
-	{
-		delete *i;
-	}*/
-	outStreams.clear();
+
+    outStreams.clear();
     logCurrent();
 }
 
