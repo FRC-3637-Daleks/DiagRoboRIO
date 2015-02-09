@@ -57,7 +57,7 @@ const bool ThreadList::joinThread()
 
 const bool ThreadList::attachThread(const TL_HANDLER self)
 {
-	if(this != self)
+	if(this != self.get())
 		return false;
 
 	workThread = thread(&ThreadList::Thread, self);

@@ -14,10 +14,10 @@ namespace DRR
 {
 
 using std::string;
-	/** Base class for DatumValue<T>
+/** Base class for DatumValue<T>
  * Allows for list creation of generic data which can be moved around in lists of data of different types
  */
-	class Datum
+class Datum
 {
 public:
 	virtual ~Datum() {};
