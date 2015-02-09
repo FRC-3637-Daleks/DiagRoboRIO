@@ -1,5 +1,4 @@
-# Turing
+# DiagRoboRio
 
-2015 C++ Robot Code Base for Recycle Rush Robot with roboRIO
-
-Clone this repo into your workspace and create a new C++ WPILib Project with the same name as this repo.
+Object-Oriented thread-based robot diagnostic tools developed for FRC teams.
+Support for logging to file, pushing to dashboard, and running check routines on certain values
