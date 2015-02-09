@@ -2,7 +2,7 @@
  * DatumValue.h
  *
  *  Created on: Feb 9, 2015
- *      Author: root
+ *      Author: edward
  */
 
 #ifndef SRC_DATUMVALUE_H_
@@ -24,6 +24,7 @@ private:
 public:
 	DatumValue(const T& init): value(init) {};
 	DatumValue(const DatumValue& other): value(other.value) {};
+
 public:
 	virtual const string toString() const override
 	{

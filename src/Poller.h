@@ -2,7 +2,7 @@
  * Poller.h
  *
  *  Created on: Feb 9, 2015
- *      Author: root
+ *      Author: edward
  */
 
 #ifndef SRC_POLLER_H_
@@ -16,6 +16,9 @@ namespace DRR
  */
 class Poller
 {
+public:
+	virtual ~Poller() {};
+
 public:
 	virtual const int Poll()=0;	///< Poll function to be overriden by derived classes. Should fetch some sort of value.
 };

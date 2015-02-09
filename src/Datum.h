@@ -2,7 +2,7 @@
  * Datum.h
  *
  *  Created on: Feb 9, 2015
- *      Author: root
+ *      Author: edward
  */
 
 #ifndef SRC_DATUM_H_
