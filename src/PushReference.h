@@ -51,7 +51,7 @@ public:
 public:
 	virtual const int Push() override
 	{
-		if(refObj.expired() || refObj == nullptr)
+		if(refObj.expired() || refObj == nullptr || ref == NULL)	// Invalid states
 			return -1;
 
 		if(sem.try_lock())
