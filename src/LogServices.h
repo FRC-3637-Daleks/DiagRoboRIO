@@ -16,6 +16,9 @@
 
 class LogService: public DataService
 {
+public:
+	typedef std::function<LogService *()> LS_HANDLER;
+
 private:
 	ostream oldCout;
 	ostream oldCerr;
@@ -24,9 +27,13 @@ private:
 	unsigned int framesUntilWrite;
 	unsigned int frames;
 
-public:
+protected:  // Must ensure dynamic allocation through factory functions
 	LogService(const bool start=false, const unsigned int period=0, const bool hijackSTDOUT=true, const unsigned int f=1);
+	LogService(const LogService& other);
+
+public:
 	virtual ~LogService();
+	virtual const DS_HANDLER emergencyClone()=0;
 
 protected:
 	virtual ostream& makeLogStream(const string &file)=0;

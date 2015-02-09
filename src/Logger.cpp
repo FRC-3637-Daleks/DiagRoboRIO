@@ -7,13 +7,18 @@ shared_ptr<LogService> Logger::service = nullptr;
 string Logger::path;
 LogPreferences Logger::preferences;
 
-std::function<LogService *()> Logger::factory = []()
+std::function<shared_ptr<LogService>()> Logger::factory = []()
 {
-	return new FileLogger(Logger::GetFullPath()+Logger::GetPreferences().text_log_filename,
+	return FileLogger::Create(Logger::GetFullPath()+Logger::GetPreferences().text_log_filename,
 							Logger::GetMakeDirCommand(),
 							Logger::GetPreferences().log_period,
 							Logger::GetPreferences().n_buffer_frames);
 };
+
+/********** STATIC LOGGER THREAD DATA ***************/
+int Logger::threadState(Logger::THREAD_STATE_INIT);
+std::thread Logger::monitorThread(&Logger::MonitorThread);
+
 
 /********** STATIC LOGGER CONSTANTS *****************/
 
@@ -94,16 +99,54 @@ const string Logger::MakeLogFileName(const string &SUBS, const string &COMP, con
 LogService &Logger::GetInstance()
 {
 	if(service == nullptr)
-		service = shared_ptr<LogService>(factory());
+		service = factory();
 	return *service;
 }
 
+void Logger::RestartService()
+{
+	if(service == nullptr)
+	{
+		GetInstance();
+		return;
+	}
+
+	service = std::dynamic_pointer_cast<LogService>(service->emergencyClone());
+	if(GetThreadState() == THREAD_STATE_RUNNING)
+		GetInstance().startLogging();
+}
+
+/*********** Monitor Thread **************/
+void Logger::MonitorThread()
+{
+	while(GetThreadState() == THREAD_STATE_INIT);   // Awaiting start signal
+
+	GetInstance().startLogging();
+
+	int failed = 0;
+	int iter = -1;
+
+	while(GetThreadState() == THREAD_STATE_RUNNING && failed >= 0)
+	{
+		if((iter = GetInstance().exceedsTimeout()) >= 0)
+		{
+			stringstream ss;
+			ss<<"Log of object #"<<iter<<" exceeded timeout";
+			LogState("Logger", LEVEL_t::CRIT, ss.str());
+			LogState("Logger", LEVEL_t::ALERT, string("Detaching Log Service thread"));
+			RestartService();
+			LogState("Logger", LEVEL_t::INFO, string("New Log Service thread started"));
+		}
+
+		std::this_thread::sleep_for(std::chrono::milliseconds(preferences.monitor_period));
+	}
+}
+
+
 // Takes in Service, level, and state of a part of a robot and stores it in 'data'
-const int Logger::LogState(const char * const SERV, const int LEV, const char * text) {
+const int Logger::LogState(const char * const SERV, const int LEV, const string& text) {
 	GetInstance().logText()<<"["<<SERV<<"]["<<LEVEL_t::text[LEV]<<"] "<<text<<std::endl;
-#ifndef DEBUG_MODE
 	if(LEV != LEVEL_t::INFO)
-#endif
 		GetInstance().logStdout()<<"["<<SERV<<"] "<<text<<std::endl;
 	return 0;
 }

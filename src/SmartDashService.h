@@ -23,7 +23,7 @@ public:
 	static SmartDashService& GetInstance();
 
 public:
-	SmartDashService(): DataService(true, DEFAULT_NET_PERIOD)
+	SmartDashService(): DataService(false, DEFAULT_NET_PERIOD)
 	{
 		SmartDashboard::init();
 	};

@@ -12,14 +12,25 @@
 
 class FileLogger: public LogService
 {
+public:
+	typedef shared_ptr<FileLogger> FS_HANDLER;
+	static const FS_HANDLER Create(const string &file, const string &command, const MILLISECONDS flp, const unsigned int f)
+	{
+		return DataService::Create<FileLogger>([file, command, flp, f]() {return new FileLogger(file, command, flp, f);});
+	}
+
 private:
-	vector<ofstream*> outStreams;
-	ofstream stateOut;
+	vector<shared_ptr<ofstream> > outStreams;
+	shared_ptr<ofstream> stateOut;
 	stringstream doubleBuffer[2];
 	short writer;
 
-public:
+protected:
 	FileLogger(const string &file, const string &command, const MILLISECONDS flp, const unsigned int f);
+	FileLogger(const FileLogger& other);
+
+public:
+	virtual const DS_HANDLER emergencyClone() override;
 	virtual ~FileLogger();
 
 public:

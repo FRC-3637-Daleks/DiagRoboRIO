@@ -16,7 +16,20 @@ LogService::LogService(const bool start, const unsigned int period, const bool h
 		std::cout.rdbuf(coutRedirect.rdbuf());
 		std::cerr.rdbuf(cerrRedirect.rdbuf());
 	}
-};
+}
+
+LogService::LogService(const LogService &other): DataService(other), oldCout(other.oldCout.rdbuf()), oldCerr(other.oldCerr.rdbuf()),
+		framesUntilWrite(other.framesUntilWrite), frames(other.frames)
+{
+	if(std::cout.rdbuf() == other.coutRedirect.rdbuf() && std::cout.rdbuf() == other.coutRedirect.rdbuf())
+	{
+		std::cout.flush();
+		std::cerr.flush();
+
+		std::cout.rdbuf(coutRedirect.rdbuf());
+		std::cerr.rdbuf(cerrRedirect.rdbuf());
+	}
+}
 
 LogService::~LogService()  // Deallocates memory
 {
@@ -50,10 +63,10 @@ const int LogService::logCurrent()
 		char buf[255];
 		while(!cerrRedirect.eof())
 		{
-			coutRedirect.getline(buf, 255);
+			cerrRedirect.getline(buf, 255);
 			logText()<<"[STDERR][ERR] "<<buf<<std::endl;
 		}
-		coutRedirect.clear();
+		cerrRedirect.clear();
 	}
 
 	return 0;

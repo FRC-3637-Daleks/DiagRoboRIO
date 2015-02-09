@@ -8,7 +8,10 @@
 #ifndef SRC_VALUELOG_H_
 #define SRC_VALUELOG_H_
 
+#include <mutex>
+#include <climits>
 #include "Loggable.h"
+
 
 template<typename DATA_TYPE>
 class ValueLog: public Loggable
@@ -24,6 +27,7 @@ private:
 	FUNC_t fn;		///< Function called by Log which returns the value being logged.
 	LOG_EXTENSION_t check;					///< Is called at every Log, defined by client
 	DATA_TYPE prev;		///< Previous value called in Log
+	std::mutex mutex;	///< Protects fn or check from being called by more than one thread
 
 protected:
 	const DATA_TYPE getPrev() const {return prev;};
@@ -40,10 +44,19 @@ public:
 	/// Pushes a value to buf and logs current buffer if full capacity
 	const int Log() override
 	{
-		prev = fn();
-		if(check(prev) == KILL)
-			return -1;
-		return 0;
+		if(mutex.try_lock())
+		{
+			prev = fn();
+			if(check(prev) == KILL)
+			{
+				mutex.unlock();
+				return -1;
+			}
+			mutex.unlock();
+			return 0;
+		}
+
+		return 1;
 	}
 
 	const int logCurrent() override {return Loggable::logCurrent();};
