@@ -31,7 +31,7 @@ public:
 public:
 	static const shared_ptr<PushReference<T> > Create(const T* val, const FUNC_t& fn)
 	{
-		return std::make_shared<PushReference<T> >(fn, ref);
+		return std::make_shared<PushReference<T> >(fn, val);
 	}
 
 private:
