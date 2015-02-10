@@ -10,14 +10,14 @@
 namespace DRR
 {
 
-const string Frame::GetKey(const int i) const
+const Frame::KEY_t Frame::GetKey(const int i) const
 {
 	if(i < keys->size())
 		return keys->at(i);
 	return string();
 }
 
-const shared_ptr<Datum>& Frame::GetDatumRef(const int i) const
+const Frame::DATA_t& Frame::GetDatumRef(const int i) const
 {
 	if(i < data.size() && i >= 0)
 		return data[i];
@@ -25,12 +25,12 @@ const shared_ptr<Datum>& Frame::GetDatumRef(const int i) const
 		return data.back();
 }
 
-shared_ptr<Datum>& Frame::GetDatumRef(const int i)
+Frame::DATA_t& Frame::GetDatumRef(const int i)
 {
-	return const_cast<shared_ptr<Datum>&>(GetDatumRef(i));
+	return const_cast<DATA_t&>(GetDatumRef(i));
 }
 
-const shared_ptr<Datum> Frame::GetDatum(const int i) const
+const Frame::DATA_t Frame::GetDatum(const int i) const
 {
 	if(i < data.size() && i >= 0)
 		return data[i];
@@ -44,14 +44,14 @@ const int Frame::GetSize() const
 	return -1;
 }
 
-pair<string, shared_ptr<Datum>> Frame::Get(const int i) const
+Frame::PAIR_t Frame::Get(const int i) const
 {
-	return pair<string, shared_ptr<Datum>>(GetKey(i), GetDatum(i));
+	return PAIR_t(GetKey(i), GetDatum(i));
 }
 
 const Frame::PUSH_t Frame::GetDatumFunctor(const int i)
 {
-	return std::bind(&shared_ptr<Datum>::reset<Datum>, &GetDatumRef(i), std::placeholders::_1);
+	return std::bind(static_cast<DATA_t&(const DATA_t&)>(&DATA_t::operator=), &GetDatumRef(i), std::placeholders::_1);
 }
 
 }
