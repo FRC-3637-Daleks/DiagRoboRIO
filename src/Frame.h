@@ -48,6 +48,7 @@ private:
 	DATA_t& GetDatumRef(const int i);
 
 public:
+	const bool isEmpty() const {return !GetDatum(0);};
 	const string GetKey(const int i) const;	///< Gets the key at i
 	const DATA_t GetDatum(const int i) const;	///< Gets the Datum at i
 	const PUSH_t GetDatumFunctor(const int i);	/// Returns a functor that allows pushers to push in new data values
