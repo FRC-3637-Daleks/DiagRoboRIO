@@ -22,7 +22,7 @@ public:
 	virtual ~Poller() {};
 
 private:
-	virtual const int Do() override final {return Poll();};
+	virtual const int Do() override {return Poll();};
 
 public:
 	virtual const int Poll()=0;	///< Poll function to be overriden by derived classes. Should fetch some sort of value.

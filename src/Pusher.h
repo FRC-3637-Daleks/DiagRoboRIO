@@ -23,7 +23,7 @@ public:
 	virtual ~Pusher() {};
 
 private:
-	virtual const int Do() override final {return Push();};
+	virtual const int Do() override {return Push();};
 
 public:
 	virtual const int Push()=0;	///< Push function to be overriden by derived classes. Should send some sort of value.
