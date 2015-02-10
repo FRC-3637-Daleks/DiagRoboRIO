@@ -26,6 +26,9 @@ public:
 	DatumValue(const DatumValue& other): value(other.value) {};
 
 public:
+	void Set(const T& v) {value = v;};
+	const T Get() const {return value;};
+
 	virtual const string toString() const override
 	{
 		std::stringstream ss;
