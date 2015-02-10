@@ -24,6 +24,12 @@ using std::queue;
 template<typename T>
 class DataBuffer: public Buffer
 {
+public:
+	static const shared_ptr<DataBuffer<T> > Create(const FUNC_t& fn)
+	{
+		return std::make_shared<DataBuffer<T> >(fn);
+	}
+
 private:
 	queue<T> buf;	///< Dataqueue
 
