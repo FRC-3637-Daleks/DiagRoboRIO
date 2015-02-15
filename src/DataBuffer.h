@@ -49,7 +49,7 @@ public:
 	virtual const int Push() override
 	{
 		if(buf.empty())
-			return 0;
+			return 1;
 		else
 		{
 			data->Set(buf.back());

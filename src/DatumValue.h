@@ -8,6 +8,7 @@
 #ifndef SRC_DATUMVALUE_H_
 #define SRC_DATUMVALUE_H_
 
+#include <PushValue.h>
 #include <sstream>
 #include "TypeNameResolver.h"
 #include "Datum.h"
@@ -28,6 +29,10 @@ public:
 public:
 	void Set(const T& v) {value = v;};
 	const T Get() const {return value;};
+	const typename PushValue<T>::FUNC_t GetPushFunctor()
+	{
+		return std::bind(DatumValue<T>::Set, this, std::placeholders::_1);
+	}
 
 	virtual const string toString() const override
 	{
@@ -46,6 +51,7 @@ public:
 	{
 		return NameOf<T>::name;
 	}
+
 };
 
 
