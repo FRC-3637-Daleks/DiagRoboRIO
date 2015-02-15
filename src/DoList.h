@@ -38,7 +38,7 @@ public:
 public:
 	/// Iterates through every object in list and calls it's `Do`
 	virtual const int DoAll();
-	virtual const int Do() override final {return DoAll();};
+	virtual const int Do() override {return DoAll();};
 
 	/// Allows access to const public members of vector
 	const LIST_TYPE * const operator->() const {return this;};

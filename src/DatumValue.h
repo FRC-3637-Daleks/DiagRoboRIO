@@ -8,7 +8,7 @@
 #ifndef SRC_DATUMVALUE_H_
 #define SRC_DATUMVALUE_H_
 
-#include <PushValue.h>
+#include "PushValue.h"
 #include <sstream>
 #include "TypeNameResolver.h"
 #include "Datum.h"

@@ -39,7 +39,7 @@ const typename PushValue<T>::FUNC_t BufferMatrix::Add(const Frame::KEY_t& key)
 const int BufferMatrix::Do()
 {
 	int ret;
-	while((ret = ThreadList::Do()) != 1);
+	while((ret = FramePusher::Do()) == 0);
 	return ret;
 }
 

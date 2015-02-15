@@ -14,7 +14,7 @@
 namespace DRR
 {
 
-class FramePusher: public ThreadList
+class FramePusher: public Pusher, public ThreadList
 {
 private:
 	Frame currentFrame;
@@ -31,6 +31,9 @@ public:
 
 public:
 	const Frame GetCurrentFrame() const {return currentFrame;};
+
+public:
+	virtual const int Do() override;
 
 protected:
 	Frame& CurrentFrame() {return currentFrame;};
