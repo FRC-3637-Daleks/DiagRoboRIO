@@ -22,7 +22,7 @@ using std::string;
 const string demangleType(const string typeName)
 {
 	auto c = typeName.begin();
-	for(; c != typeName.end() && !((*c <= 'Z' && *c >= 'A') || (c <= 'z' && *c >= 'a') || *c == '_'); c++); // c++! :o
+	for(; c != typeName.end() && !((*c <= 'Z' && *c >= 'A') || (*c <= 'z' && *c >= 'a') || *c == '_'); c++); // c++! :o
 	return string(c, typeName.end());
 }
 #endif
@@ -31,10 +31,10 @@ const string demangleType(const string typeName)
 template<typename T>
 struct NameOf
 {
-	static const string name = demangleType(typeid(T).name());
+	static const string name() {static string n(demangleType(typeid(T).name())); return n;};
 };
 
-#define PRIMITIVE_NAME_MACRO(T) template<> struct NameOf<T> { static const string name = #T; };
+#define PRIMITIVE_NAME_MACRO(T) template<> struct NameOf<T> { static const string name() {static string n(#T); return n;}; };
 
 PRIMITIVE_NAME_MACRO(bool);
 PRIMITIVE_NAME_MACRO(char);

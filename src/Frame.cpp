@@ -10,6 +10,15 @@
 namespace DRR
 {
 
+Frame::Frame(const vector<PAIR_t> p): Frame()
+{
+	for(auto i = p.begin(); i != p.end(); i++)
+	{
+		keys->push_back(i->first);
+		data.push_back(i->second);
+	}
+}
+
 const Frame::KEY_t Frame::GetKey(const int i) const
 {
 	if(i < keys->size())

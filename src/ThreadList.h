@@ -47,6 +47,8 @@ private:
 protected:	// Should be called with special creator
 	ThreadList(const LIST_TYPE& listInit, const MILLISECONDS p): DoList(listInit), threadState(INIT), period(p), time(clock()) {};
 
+	ThreadList(const MILLISECONDS p): threadState(INIT), period(p), time(clock()) {};
+
 	/// Makes sure old list is detached and no longer running
 	ThreadList(ThreadList&& other): DoList(other), threadState(other.threadState),
 			period(other.period), time(clock()) {other.killThread();};
