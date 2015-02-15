@@ -10,11 +10,11 @@
 namespace DRR
 {
 
-BufferMatrix::BufferMatrix(const MILLISECONDS p): ThreadList(p)
+BufferMatrix::BufferMatrix(const MILLISECONDS p): FramePusher(p)
 {
 }
 
-BufferMatrix::BufferMatrix(BufferMatrix&& other): ThreadList(std::move(other)), currentFrame(other.currentFrame)
+BufferMatrix::BufferMatrix(BufferMatrix&& other): FramePusher(std::move(other))
 {
 }
 
@@ -23,12 +23,8 @@ const int BufferMatrix::Add(const Frame::KEY_t& key, const BUFFER_t buf)
 	if(buf == nullptr)
 		return -1;
 
-	const Frame::PAIR_t pair(key, buf->Get());
-	if(pair.second == nullptr)
-		return -1;
-
 	push_back(buf);
-	currentFrame.Add(pair);
+	FramePusher::Add(key, buf->Get());
 	return 0;
 }
 
@@ -38,6 +34,13 @@ const typename PushValue<T>::FUNC_t BufferMatrix::Add(const Frame::KEY_t& key)
 	auto buf = DataBuffer<T>::Create();
 	Add(key, buf);
 	return buf->GetPushFunctor();
+}
+
+const int BufferMatrix::Do()
+{
+	int ret;
+	while((ret = ThreadList::Do()) != 1);
+	return ret;
 }
 
 
