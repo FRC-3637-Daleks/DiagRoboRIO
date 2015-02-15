@@ -16,7 +16,7 @@
 #include "LogServices.h"
 #include "FileLogger.h"
 #include "DataService.h"
-#include "mosquitto.h"
+#include "MosCutie.h"
 
 using std::shared_ptr;
 
