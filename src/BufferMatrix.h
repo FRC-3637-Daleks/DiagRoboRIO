@@ -20,6 +20,10 @@ namespace DRR
 class BufferMatrix: public Pusher, public ThreadList
 {
 private:
+	Frame currentFrame;
+
+protected:
+	BufferMatrix()
 
 };
 

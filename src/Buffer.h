@@ -22,23 +22,23 @@ using std::shared_ptr;
  *
  */
 
-class Buffer: public PushValue<shared_ptr<const Datum>>
+class Buffer: public Pusher
 {
 public:
-	typedef shared_ptr<const Datum> DATA_t;
-	typedef PushValue<DATA_t> PARENT_t;
-	typedef typename PARENT_t::FUNC_t FUNC_t;
+	typedef shared_ptr<Datum> DATA_t;
+
+private:
+	DATA_t datumRef;
 
 protected:	/// Protected in order to ensure that the Buffer is made from an inherited constructor function
-	Buffer(const FUNC_t& fn): PARENT_t(fn) {};
+	Buffer(const DATA_t& d): datumRef(d) {};
 	Buffer(const Buffer& other)=delete;
 
 public:
-	virtual ~Buffer() {};
+	const DATA_t Get() const {return datumRef;};
 
 public:
-	virtual const DATA_t Pop()=0;			///< To be overriden by the derived class where the actual Buffer is defined
-	virtual const DATA_t GetValue() override final {return Pop();};	///< Calls Pop
+	virtual ~Buffer() {};
 };
 
 }

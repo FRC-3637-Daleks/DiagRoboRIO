@@ -49,11 +49,6 @@ Frame::PAIR_t Frame::Get(const int i) const
 	return PAIR_t(GetKey(i), GetDatum(i));
 }
 
-const Frame::PUSH_t Frame::GetDatumFunctor(const int i)
-{
-	return std::bind(static_cast<DATA_t&(DATA_t::*)(const DATA_t&)>(&DATA_t::operator=), &GetDatumRef(i), std::placeholders::_1);
-}
-
 }
 
 

@@ -28,9 +28,8 @@ using std::shared_ptr;
 class Frame
 {
 public:
-	typedef Buffer::FUNC_t PUSH_t;
 	typedef string KEY_t;
-	typedef shared_ptr<const Datum> DATA_t;
+	typedef shared_ptr<Datum> DATA_t;
 	typedef pair<KEY_t, DATA_t> PAIR_t;
 
 private:
@@ -38,8 +37,9 @@ private:
 	vector<DATA_t> data;		///< A list of shared data values
 
 public:
-	Frame(const shared_ptr<const vector<string>> k): keys(k) {};
+	Frame(const vector<const PAIR_t> k);
 	Frame(const shared_ptr<const vector<string>> k, const vector<DATA_t> d): keys(k), data(d) {};
+	Frame(const vector<string> k, const vector<DATA_t> d): Frame(std::make_shared<vector<string>>(k), d) {};
 	Frame(const Frame& other): keys(other.keys), data(other.data) {};
 	virtual ~Frame() {};
 
@@ -51,21 +51,16 @@ public:
 	const bool isEmpty() const {return !GetDatum(0);};
 	const string GetKey(const int i) const;	///< Gets the key at i
 	const DATA_t GetDatum(const int i) const;	///< Gets the Datum at i
-	const PUSH_t GetDatumFunctor(const int i);	/// Returns a functor that allows pushers to push in new data values
 	const int GetSize() const;	///< Returns the size of the vectors, or -1 if they have different sizes
 	PAIR_t Get(const int i) const;		///< Returns a Key,Datum pair at i, if i is less than both sizes, otherwise one will be empty
 
 public:	/// Data Access
-	vector<DATA_t> * const operator->() {return &data;};
 	const vector<DATA_t> * const operator->() const {return &data;};
 	vector<DATA_t>& GetData() {return data;};
-	const vector<DATA_t>& GetData() const {return data;};
 	const shared_ptr<const vector<string>> GetKeys() const {return keys;};
 };
 
 
 }
-
-
 
 #endif /* SRC_FRAME_H_ */

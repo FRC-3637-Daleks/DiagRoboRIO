@@ -25,31 +25,36 @@ template<typename T>
 class DataBuffer: public Buffer
 {
 public:
-	static const shared_ptr<DataBuffer<T> > Create(const FUNC_t& fn)
+	typedef shared_ptr<DatumValue<T>> DATA_t;
+
+public:
+	static const shared_ptr<DataBuffer<T>> Create()
 	{
-		return std::make_shared<DataBuffer<T> >(fn);
+		return std::make_shared<DataBuffer<T> >();
 	}
 
 private:
 	queue<T> buf;	///< Dataqueue
+	DATA_t data;
+
 
 protected:
-	DataBuffer(const FUNC_t& fn): Buffer(fn) {};
+	DataBuffer(): data(new DatumValue<T>), Buffer(data) {};
 	DataBuffer(const DataBuffer& other)=delete;
 
 public:
 	virtual ~DataBuffer() {};
 
 public:
-	virtual const DATA_t Pop() override
+	virtual const int Push() override
 	{
 		if(buf.empty())
-			return nullptr;
+			return 0;
 		else
 		{
-			T value = buf.back();
+			data->Set(buf.back());
 			buf.pop();
-			return std::make_shared<DatumValue<T>>(value);
+			return 0;
 		}
 	}
 
