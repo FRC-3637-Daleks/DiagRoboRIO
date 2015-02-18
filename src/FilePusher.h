@@ -28,15 +28,18 @@ using std::shared_ptr;
 class FilePusher: virtual public Pusher
 {
 public:
-	static const shared_ptr<FilePusher> Create(const string& filename);
+	static const shared_ptr<FilePusher> Create(const string& filename)
+	{
+		return shared_ptr<FilePusher>(new FilePusher(filename));
+	}
 
 private:
 	unique_ptr<ostream> output;
-	stringstream doubleBuffer[2];
+	unique_ptr<stringstream[]> doubleBuffer;
 	bool flip;
 
 protected:
-	FilePusher(const string& filename): output(std::make_unique<ofstream>(filename)), flip(0) {};
+	FilePusher(const string& filename): output(std::make_unique<ofstream>(filename)), doubleBuffer(new stringstream[2]), flip(0) {};
 	FilePusher(FilePusher&& other);
 
 public:

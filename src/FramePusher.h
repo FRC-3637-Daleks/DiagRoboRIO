@@ -14,7 +14,7 @@
 namespace DRR
 {
 
-class FramePusher: public Pusher, public ThreadList
+class FramePusher: virtual public Pusher, public ThreadList
 {
 private:
 	Frame currentFrame;
