@@ -58,6 +58,28 @@ Frame::PAIR_t Frame::Get(const int i) const
 	return PAIR_t(GetKey(i), GetDatum(i));
 }
 
+const string Frame::DataString() const
+{
+	string ret;
+	for(int i = 0; i < data.size(); i++)
+	{
+		ret += data[i]->toString();
+		if(i < data.size() - 1)
+			ret += ',';
+	}
+
+	return ret;
 }
 
+const string Frame::KeyString() const
+{
+	string ret;
+	for(int i = 0; i < keys->size(); i++)
+	{
+		ret += keys->at(i);
+		if(i < data.size() - 1)
+			ret += ',';
+	}
+}
 
+}

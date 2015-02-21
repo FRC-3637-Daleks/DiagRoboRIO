@@ -60,6 +60,10 @@ public:	/// Data Access
 	const vector<DATA_t> * const operator->() const {return &data;};
 	const vector<DATA_t>& GetData() const {return data;};
 	const shared_ptr<const vector<string>> GetKeys() const {return keys;};
+
+public:
+	const string DataString() const;
+	const string KeyString() const;
 };
 
 

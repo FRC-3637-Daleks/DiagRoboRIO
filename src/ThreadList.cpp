@@ -24,6 +24,11 @@ const ThreadList::TL_HANDLER ThreadList::Restart(TL_HANDLER old)
 	return ret;
 }
 
+void ThreadList::Restart(TL_HANDLER *handler)
+{
+	*handler = Restart(*handler);
+}
+
 void ThreadList::Thread(const TL_HANDLER list)
 {
 	while(list->GetThreadState() != KILL)
