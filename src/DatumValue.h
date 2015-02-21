@@ -43,13 +43,13 @@ public:
 
 	virtual const unsigned int fill(const void * *memPtr) const override
 	{
-		memPtr = &value;
+		*memPtr = (void *)&value;
 		return sizeof(T);
 	}
 
 	virtual const string getType() const
 	{
-		return NameOf<T>::name;
+		return NameOf<T>::name();
 	}
 
 };
