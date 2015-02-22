@@ -28,19 +28,12 @@ const int BufferMatrix::Add(const Frame::KEY_t& key, const BUFFER_t buf)
 	return 0;
 }
 
-template<typename T>
-const typename PushValue<T>::FUNC_t BufferMatrix::Add(const Frame::KEY_t& key)
-{
-	auto buf = DataBuffer<T>::Create();
-	Add(key, buf);
-	return buf->GetPushFunctor();
-}
 
-const int BufferMatrix::Do()
+const int BufferMatrix::DoAll()
 {
 	int ret;
-	while((ret = FramePusher::Do()) == 0);
-	return ret;
+	while((ret = ThreadList::DoAll()) == 0);
+	return ret | Push();
 }
 
 

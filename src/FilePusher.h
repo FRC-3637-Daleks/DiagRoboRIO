@@ -8,6 +8,7 @@
 #ifndef SRC_FILEPUSHER_H_
 #define SRC_FILEPUSHER_H_
 
+#include <iostream>
 #include <string>
 #include <fstream>
 #include <sstream>
@@ -39,7 +40,7 @@ private:
 	bool flip;
 
 protected:
-	FilePusher(const string& filename): output(std::make_unique<ofstream>(filename)), doubleBuffer(new stringstream[2]), flip(0) {};
+	FilePusher(const string& filename): output(std::make_unique<ofstream>(filename)), doubleBuffer(new stringstream[2]), flip(0) {std::cout<<"Opening "<<filename<<std::endl;};
 	FilePusher(FilePusher&& other);
 
 public:

@@ -37,7 +37,7 @@ private:
 	weak_ptr<PollValue<T> > refObj;	///< Weak pointer to the referring object
 
 protected:
-	PushReference(const T *val, const FUNC_t fn): PushValue<T>(fn), ref(val), refObj(nullptr) {};
+	PushReference(const T *val, const FUNC_t fn): PushValue<T>(fn), ref(val), refObj() {};
 	PushReference(const T *val, const DatumValue<T> datum): PushReference(val, datum.GetPushFunctor()) {};
 	PushReference(const weak_ptr<PollValue<T> > obj, const FUNC_t fn): PushValue<T>(fn), ref(&refObj->getPrevious()), refObj(obj) {};
 	PushReference(const weak_ptr<PollValue<T>> obj, const DatumValue<T> datum): PushReference(obj, datum.GetPushFunctor()) {};
@@ -49,7 +49,7 @@ public:
 public:
 	virtual const int Push() override
 	{
-		if(refObj.expired() || refObj == nullptr || ref == NULL)	// Invalid states
+		if( ref == NULL)	// Invalid states
 			return -1;
 
 		return PushValue<T>::Push();

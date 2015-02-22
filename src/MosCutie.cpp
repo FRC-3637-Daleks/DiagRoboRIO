@@ -5,6 +5,7 @@
  *      Author: edward
  */
 
+#include <iostream>
 #include "MosCutie.h"
 
 namespace DRR
@@ -21,6 +22,7 @@ MosCutie& MosCutie::GetInstance()
 {
 	if(!instance)
 	{
+		mosqpp::lib_init();
 		if(init)
 			instance.reset(new MosCutie(initHost, initPeriod));
 		else
@@ -63,17 +65,23 @@ void MosCutie::Init(const int period, const char *host)
 MosCutie::MosCutie(const char * const host, const int timeout): mosquittopp()
 {
 	connect_async(host, 1180);
-	this->loop_forever(timeout);
+	loop_start();
 }
 
 void MosCutie::on_connect(int rc)
 {
-
+	if(rc)
+		std::cout<<"MQTT Connection Failed"<<std::endl;
+	else
+		std::cout<<"MQTT Connection Initiated"<<std::endl;
 }
 
 void MosCutie::on_disconnect(int rc)
 {
-
+	if(rc)
+		std::cout<<"MQTT Fail on disconnect"<<std::endl;
+	else
+		std::cout<<"MQTT Safe disconnect"<<std::endl;
 }
 
 void MosCutie::on_message(const mosquitto_message * message)
@@ -86,9 +94,8 @@ void MosCutie::on_message(const mosquitto_message * message)
 	subscriptions[message->topic] = string((char *)message->payload, message->payloadlen);
 }
 
-void MosCutie::on_publish(int rc)
+void MosCutie::on_publish(int mid)
 {
-
 }
 
 void MosCutie::on_subscribe(int mid, int qos_count, const int * granted_qos)

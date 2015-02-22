@@ -16,6 +16,9 @@ namespace DRR
 
 class FramePusher: virtual public Pusher, public ThreadList
 {
+public:
+	typedef shared_ptr<FramePusher> FP_HANDLER;
+
 private:
 	Frame currentFrame;
 
@@ -24,7 +27,7 @@ protected:
 	FramePusher(FramePusher&& other): ThreadList(std::move(other)), currentFrame(other.currentFrame) {};
 
 public:
-	virtual ~FramePusher();
+	virtual ~FramePusher() {};
 
 public:
 	const int Add(const Frame::KEY_t &key, const Frame::DATA_t& d);

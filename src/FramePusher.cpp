@@ -19,6 +19,8 @@ const int FramePusher::Do()
 
 const int FramePusher::Add(const Frame::KEY_t& key, const Frame::DATA_t& d)
 {
+	if(d == nullptr || key.empty())
+		return -1;
 	Frame::PAIR_t pair(key, d);
 	currentFrame.Add(pair);
 	return 0;

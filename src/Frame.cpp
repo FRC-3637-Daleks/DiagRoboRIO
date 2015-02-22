@@ -80,6 +80,14 @@ const string Frame::KeyString() const
 		if(i < data.size() - 1)
 			ret += ',';
 	}
+
+	return ret;
+}
+
+void Frame::Add(const PAIR_t pair)
+{
+	keys->push_back(pair.first);
+	data.push_back(pair.second);
 }
 
 }

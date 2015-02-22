@@ -8,6 +8,7 @@
 #ifndef SRC_DATABUFFER_H_
 #define SRC_DATABUFFER_H_
 
+#include <iostream>
 #include <queue>
 
 #include "Buffer.h"
@@ -30,16 +31,16 @@ public:
 public:
 	static const shared_ptr<DataBuffer<T>> Create()
 	{
-		return std::make_shared<DataBuffer<T> >();
+		return shared_ptr<DataBuffer<T>>(new DataBuffer());
 	}
 
 private:
-	queue<T> buf;	///< Dataqueue
 	DATA_t data;
+	queue<T> buf;	///< Dataqueue
 
 
 protected:
-	DataBuffer(): data(new DatumValue<T>), Buffer(data) {};
+	DataBuffer(): Buffer(nullptr), data(shared_ptr<DatumValue<T>>(new DatumValue<T>)) {Set(data);};
 	DataBuffer(const DataBuffer& other)=delete;
 
 public:
@@ -58,9 +59,10 @@ public:
 		}
 	}
 
-	const typename PushValue<T>::FUNC_t GetPushFunctor() const
+	const typename PushValue<T>::FUNC_t GetPushFunctor()
 	{
-		return std::bind(&queue<T>::push, &buf, std::placeholders::_1);
+		return [this](T val) {buf.push(val);};
+		//return std::bind<void(T)>(static_cast<void(queue<T>::*)(const T&)>(&queue<T>::push), &buf, std::placeholders::_1);
 	}
 };
 

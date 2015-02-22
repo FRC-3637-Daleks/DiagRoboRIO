@@ -27,7 +27,7 @@ public:
 	typedef shared_ptr<ThreadList> TL_HANDLER;
 
 public:
-	/// Constructs a new ThreadList and attaches it to itself, returning the
+	/// Constructs a new ThreadList and attaches it to itself, returning the thread
 	static const TL_HANDLER Spawn(const LIST_TYPE& listInit, const MILLISECONDS p);
 
 	/// Copies the old thread into a new thread, detaching the old and return the new
@@ -68,6 +68,8 @@ protected: // Thread Control
 	void endThread() {setThreadState(KILL);};
 	void killThread();
 	const bool joinThread();
+
+public:
 	const bool attachThread(const TL_HANDLER self);
 
 public:

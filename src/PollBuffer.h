@@ -8,6 +8,8 @@
 #ifndef SRC_POLLBUFFER_H_
 #define SRC_POLLBUFFER_H_
 
+#include <iostream>
+
 #include "PollValue.h"
 #include "PushReference.h"
 #include "DataBuffer.h"
@@ -23,26 +25,26 @@ public:
 	typedef typename PushReference<T>::FUNC_t PUSH_t;
 
 public:
-	static const shared_ptr<BufferPoll> Create(const POLL_t& poll, const PUSH_t& push)
+	static const shared_ptr<BufferPoll<T>> Create(const POLL_t& poll, const PUSH_t& push)
 	{
-		return std::make_shared<BufferPoll>(poll, push);
+		return shared_ptr<BufferPoll<T>>(new BufferPoll<T>(poll, push));
 	}
 
-	static const shared_ptr<BufferPoll> Create(const POLL_t& poll, const DataBuffer<T> &db)
+	static const shared_ptr<BufferPoll<T>> Create(const POLL_t& poll, const DataBuffer<T> &db)
 	{
 		return Create(poll, db.GetPushFunctor());
 	}
 
-	static const shared_ptr<BufferPoll> Create(const POLL_t& poll, const shared_ptr<const DataBuffer<T>> db)
+	static const shared_ptr<BufferPoll<T>> Create(const POLL_t& poll, const shared_ptr<const DataBuffer<T>> db)
 	{
 		return Create(poll, *db);
 	}
 
 protected:
-	BufferPoll(const POLL_t& poll, const PUSH_t& push): PollValue<T>(poll), PushReference<T>(&getPrevious(), push) {};
+	BufferPoll(const POLL_t& poll, const PUSH_t& push): PollValue<T>(poll), PushReference<T>(&PollValue<T>::getPrevious(), push) {};
 	BufferPoll(const POLL_t& poll, const DataBuffer<T>& db): BufferPoll(poll, db.GetPushFunctor()) {};
 	BufferPoll(const POLL_t& poll, const shared_ptr<const DataBuffer<T>> db): BufferPoll(poll, *db) {};
-	BufferPoll(const BufferPoll& other)=delete;
+	BufferPoll(const BufferPoll<T>& other)=delete;
 
 public:
 	virtual ~BufferPoll() {};
@@ -52,9 +54,9 @@ public:
 	virtual const int Do() override
 	{
 		int ret = 0;
-		if((ret |= Poll()) < 0)
+		if((ret |= PollValue<T>::Poll()) < 0)
 			return ret;
-		return ret | Push();
+		return ret | PushReference<T>::Push();
 	}
 };
 

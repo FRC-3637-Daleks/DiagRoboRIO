@@ -19,7 +19,7 @@ using std::string;
 #define DEMANGLER
 
 /// Removes numbers before typenames, if any. FRC compilers found to mangle class names with numerals preceding source class name
-const string demangleType(const string typeName)
+inline const string demangleType(const string typeName)
 {
 	auto c = typeName.begin();
 	for(; c != typeName.end() && !((*c <= 'Z' && *c >= 'A') || (*c <= 'z' && *c >= 'a') || *c == '_'); c++); // c++! :o

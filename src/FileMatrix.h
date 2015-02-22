@@ -16,9 +16,15 @@ namespace DRR
 
 class FileMatrix: public FilePusher, public BufferMatrix
 {
+public:
+	static const shared_ptr<FileMatrix> Create(const string& filename, const MILLISECONDS mils);
+
+private:
+	bool headers;
+
 protected:
 	FileMatrix(const string& filename, const MILLISECONDS mils);
-	FileMatrix(FileMatrix&& other): FilePusher(std::move(other)), BufferMatrix(std::move(other)) {};
+	FileMatrix(FileMatrix&& other): FilePusher(std::move(other)), BufferMatrix(std::move(other)), headers(other.headers) {};
 
 public:
 	virtual ~FileMatrix() {};

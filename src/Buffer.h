@@ -31,8 +31,11 @@ private:
 	DATA_t datumRef;
 
 protected:	/// Protected in order to ensure that the Buffer is made from an inherited constructor function
-	Buffer(const DATA_t& d): datumRef(d) {};
+	Buffer(const DATA_t& d=nullptr): datumRef(d) {};
 	Buffer(const Buffer& other)=delete;
+
+protected:
+	void Set(const DATA_t ref) {datumRef = ref;};
 
 public:
 	const DATA_t Get() const {return datumRef;};

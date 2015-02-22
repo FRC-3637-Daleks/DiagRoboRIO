@@ -35,10 +35,17 @@ public:
 
 	/// Creates a new key,buffer pair and adds it to the list, returning the push functor needed to add to the polling object
 	template<typename T>
-	const typename PushValue<T>::FUNC_t Add(const Frame::KEY_t &key);
+	const typename PushValue<T>::FUNC_t Add(const Frame::KEY_t &key)
+	{
+		auto buf = DataBuffer<T>::Create();
+		if(Add(key, buf) < 0)
+			return [](T t){};	// Error case
+
+		return buf->GetPushFunctor();
+	};
 
 public:
-	virtual const int Do() override;
+	virtual const int DoAll() override;
 };
 
 }
