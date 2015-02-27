@@ -10,7 +10,7 @@
 
 #include <thread>
 #include <memory>
-#include <ctime>
+#include <chrono>
 
 #include "LogPreferences.h"
 #include "DoList.h"
@@ -22,6 +22,9 @@ using std::thread;
 
 class ThreadList: public DoList
 {
+private:
+	typedef std::chrono::time_point<std::chrono::system_clock> time_point;
+
 public:
 	typedef enum {INIT, RUNNING, KILL} THREAD_STATE;
 	typedef shared_ptr<ThreadList> TL_HANDLER;
@@ -41,26 +44,26 @@ private:
 private:
 	thread workThread;
 	THREAD_STATE threadState;
-	MILLISECONDS period;
-	clock_t time;
+	std::chrono::milliseconds period;
+	time_point last;
 
 protected:	// Should be called with special creator
-	ThreadList(const LIST_TYPE& listInit, const MILLISECONDS p): DoList(listInit), threadState(INIT), period(p), time(clock()) {};
+	ThreadList(const LIST_TYPE& listInit, const MILLISECONDS p): DoList(listInit), threadState(INIT), period(p), last(getNow()) {};
 
-	ThreadList(const MILLISECONDS p): threadState(INIT), period(p), time(clock()) {};
+	ThreadList(const MILLISECONDS p): threadState(INIT), period(p), last(getNow()) {};
 
 	/// Makes sure old list is detached and no longer running
 	ThreadList(ThreadList&& other): DoList(other), threadState(other.threadState),
-			period(other.period), time(clock()) {other.killThread();};
+			period(other.period), last(getNow()) {other.killThread();};
 
 public:
 	virtual ~ThreadList() {};
 
 private:  // internals
-	void resetTime() {time = clock();};
-	clock_t getElapsed() const {return time-clock();};
-	MILLISECONDS getElapsedMs() const {return getElapsed()*1000/CLOCKS_PER_SEC;};
-	MILLISECONDS getTimeLeftMs() const {return period-getElapsedMs();};
+	static const time_point getNow() {return std::chrono::system_clock::now();};
+	void resetTime() {last = getNow();};
+	const std::chrono::milliseconds getElapsed() const {return std::chrono::duration_cast<std::chrono::milliseconds>(getNow() - last);};
+	const std::chrono::milliseconds getTimeLeft() const {return std::chrono::milliseconds(period)-getElapsed();};
 
 protected: // Thread Control
 	void setThreadState(const THREAD_STATE state) {threadState = state;};
@@ -79,11 +82,10 @@ public:
 
 public:	// Info
 	const THREAD_STATE GetThreadState() const {return threadState;};
-	const MILLISECONDS GetPeriod() const {return period;};
-	const clock_t GetPeriodClocks() const {return GetPeriod()*CLOCKS_PER_SEC/1000;};
-	const clock_t GetAveragePeriod() const {return GetPeriod()/size();};
-	const clock_t GetMaxTime() const {return (GetIteration()+1)*GetAveragePeriod();};
-	const bool exceedsTimeout(clock_t timeoutClocks=0);
+	const std::chrono::milliseconds GetPeriod() const {return period;};
+	const std::chrono::microseconds GetAveragePeriod() const {return std::chrono::microseconds(GetPeriod())/size();};
+	const std::chrono::milliseconds GetMaxTime() const {return std::chrono::duration_cast<std::chrono::milliseconds>((GetIteration()+1)*GetAveragePeriod());};
+	const bool exceedsTimeout(const std::chrono::milliseconds timeoutClocks=std::chrono::milliseconds::zero());
 };
 
 

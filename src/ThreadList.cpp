@@ -41,8 +41,8 @@ void ThreadList::Thread(const TL_HANDLER list)
 			if(list->DoAll() < 0)
 				list->endThread();
 		}
-		if(list->getTimeLeftMs() > 0.0)
-			std::this_thread::sleep_for(std::chrono::milliseconds(list->getTimeLeftMs()));
+		if(list->getTimeLeft() > std::chrono::milliseconds::zero())
+			std::this_thread::sleep_for(list->getTimeLeft());
 	}
 }
 
@@ -70,9 +70,9 @@ const bool ThreadList::attachThread(const TL_HANDLER self)
 	return true;
 }
 
-const bool ThreadList::exceedsTimeout(clock_t timeoutClocks)
+const bool ThreadList::exceedsTimeout(std::chrono::milliseconds timeoutClocks)
 {
-	if(timeoutClocks == 0)
+	if(timeoutClocks == std::chrono::milliseconds::zero())
 		timeoutClocks = GetMaxTime();
 	return getElapsed() > timeoutClocks;
 }
