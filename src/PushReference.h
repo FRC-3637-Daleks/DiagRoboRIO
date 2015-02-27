@@ -12,6 +12,7 @@
 #include <mutex>
 #include <memory>
 
+#include "DatumValue.h"
 #include "PollValue.h"
 #include "PushValue.h"
 
@@ -29,7 +30,22 @@ public:
 public:
 	static const shared_ptr<PushReference<T> > Create(const T* val, const FUNC_t& fn)
 	{
-		return std::make_shared<PushReference<T> >(fn, val);
+		return std::shared_ptr<PushReference<T> >(new PushReference<T>(val, fn));
+	}
+
+	static const shared_ptr<PushReference<T> > Create(const T* val, const DatumValue<T> datum)
+	{
+		return std::shared_ptr<PushReference<T> >(new PushReference<T>(val, datum));
+	}
+
+	static const shared_ptr<PushReference<T> > Create(const weak_ptr<PollValue<T>> obj, const FUNC_t fn)
+	{
+		return std::shared_ptr<PushReference<T> >(new PushReference(obj, fn));
+	}
+
+	static const shared_ptr<PushReference<T> > Create(const weak_ptr<PollValue<T>> obj, const DatumValue<T> datum)
+	{
+		return std::shared_ptr<PushReference<T> >(new PushReference(obj, datum));
 	}
 
 private:
