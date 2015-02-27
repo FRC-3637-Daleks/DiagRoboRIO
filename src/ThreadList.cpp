@@ -72,6 +72,8 @@ const bool ThreadList::attachThread(const TL_HANDLER self)
 
 const bool ThreadList::exceedsTimeout(std::chrono::milliseconds timeoutClocks)
 {
+	if(GetIteration() < 0)
+		return false;
 	if(timeoutClocks == std::chrono::milliseconds::zero())
 		timeoutClocks = GetMaxTime();
 	return getElapsed() > timeoutClocks;
