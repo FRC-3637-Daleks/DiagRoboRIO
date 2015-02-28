@@ -43,7 +43,7 @@ void DiagnosticService::Monitor()
 			// If the thread is running but exceeds its timeout, restart it
 			if(threads[i]->exceedsTimeout() && threads[i]->GetThreadState() == ThreadList::RUNNING)
 			{
-				std::cout<<"Thread timed out"<<std::endl;
+				std::cout<<"Thread timed out. Average Period micros: "<<threads[i]->GetAveragePeriod().count()<<"Max Time in millis"<<threads[i]->GetMaxTime().count()<<std::endl;
 				ThreadList::Restart(&threads[i]);
 			}
 		}
