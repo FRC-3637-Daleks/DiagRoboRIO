@@ -55,7 +55,7 @@ private:
 protected:
 	PushReference(const T *val, const FUNC_t fn): PushValue<T>(fn), ref(val), refObj() {};
 	PushReference(const T *val, const DatumValue<T> datum): PushReference(val, datum.GetPushFunctor()) {};
-	PushReference(const weak_ptr<PollValue<T> > obj, const FUNC_t fn): PushValue<T>(fn), ref(&refObj->getPrevious()), refObj(obj) {};
+	PushReference(const weak_ptr<PollValue<T> > obj, const FUNC_t fn): PushValue<T>(fn), ref(&obj.lock()->getPrevious()), refObj(obj) {};
 	PushReference(const weak_ptr<PollValue<T>> obj, const DatumValue<T> datum): PushReference(obj, datum.GetPushFunctor()) {};
 	PushReference(const PushReference& other)=delete;
 

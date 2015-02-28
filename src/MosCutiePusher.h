@@ -37,7 +37,7 @@ public:
 
 public:
 	template<typename T>
-	const PushReference<T> Add(const Frame::KEY_t key, const weak_ptr<PollValue<T>> &poll, const bool persist=false)
+	const shared_ptr<PushReference<T>> Add(const Frame::KEY_t key, const weak_ptr<PollValue<T>> &poll, const bool persist=false)
 	{
 		auto pusher(PushReference<T>::Create(poll, [key, persist](const T t) {
 			return MosCutie::Publish(key, DatumValue<T>(t).toString(), persist);
@@ -48,7 +48,7 @@ public:
 	};
 
 	template<typename T>
-	const PushReference<T> Add(const Frame::KEY_t key, const T *val, const bool persist=false)
+	const shared_ptr<PushReference<T>> Add(const Frame::KEY_t key, const T *val, const bool persist=false)
 	{
 		auto pusher(PushReference<T>::Create(val, [key, persist](const T t) {
 			return MosCutie::Publish(key, DatumValue<T>(t).toString(), persist);
