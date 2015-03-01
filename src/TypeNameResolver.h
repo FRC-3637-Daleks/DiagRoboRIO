@@ -34,7 +34,14 @@ struct NameOf
 	static const string name() {static string n(demangleType(typeid(T).name())); return n;};
 };
 
+template<typename T>
+struct DefaultValue
+{
+	static const T get() {static T val(0.0); return val;};
+};
+
 #define PRIMITIVE_NAME_MACRO(T) template<> struct NameOf<T> { static const string name() {static string n(#T); return n;}; };
+#define DEFAULT_VALUE_MACRO(T, def) template<> struct DefaultValue<T> {static const T get() {static T val(def); return val;}; };
 
 PRIMITIVE_NAME_MACRO(bool);
 PRIMITIVE_NAME_MACRO(char);
@@ -47,6 +54,8 @@ PRIMITIVE_NAME_MACRO(unsigned long);
 PRIMITIVE_NAME_MACRO(unsigned long long);
 PRIMITIVE_NAME_MACRO(float);
 PRIMITIVE_NAME_MACRO(double);
+
+DEFAULT_VALUE_MACRO(std::string, " ");
 
 
 }

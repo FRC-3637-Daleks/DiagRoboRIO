@@ -23,7 +23,7 @@ class DatumValue: public Datum
 private:
 	T value;
 public:
-	DatumValue(const T& init=0.0): value(init) {};
+	DatumValue(const T& init=DefaultValue<T>::get()): value(init) {};
 	DatumValue(const DatumValue& other): value(other.value) {};
 
 public:

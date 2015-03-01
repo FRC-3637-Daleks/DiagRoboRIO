@@ -29,7 +29,7 @@ public:
 	/// PollValues most only come in the form of dynamically shared objects
 	static const shared_ptr<PollValue<T> > Create(const FUNC_t& fn)
 	{
-		return std::make_shared<PollValue<T> >(fn);
+		return std::shared_ptr<PollValue<T> >(new PollValue(fn));
 	}
 
 private:
