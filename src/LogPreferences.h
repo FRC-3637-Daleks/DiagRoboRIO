@@ -9,41 +9,59 @@
 #define SRC_LOGPREFERENCES_H_
 
 #include "Defaults.h"
+#include "FileMatrix.h"
+#include "DashboardPusher.h"
+#include "MosCutiePusher.h"
 
-typedef unsigned int MILLISECONDS;
+namespace DRR
+{
+
+typedef const shared_ptr<FileMatrix> (* FileMatrixFactory)(const string&, const MILLISECONDS);
+typedef const shared_ptr<DashboardPusher> (* DashboardPusherFactory)(const MILLISECONDS);
 
 class LogPreferences
 {
 public:
+	MILLISECONDS poll_period;
 	MILLISECONDS log_period;
 	MILLISECONDS monitor_period;
-	int mqtt_period;
+	int dash_period;
 	unsigned int n_buffer_frames;
-	const char * mqtt_broker_host;
 	const char * log_home_path;
 	const char * text_log_filename;
+	const char * value_log_filename;
+	FileMatrixFactory file_fact;
+	DashboardPusherFactory dash_fact;
 
 public:
 	LogPreferences(const char * tlf=DEFAULT_LOG_TEXT_OUT,
+				   const char * vlf=DEFAULT_LOG_VALUE_OUT,
 				   const unsigned int nbf=DEFAULT_LOG_BUF_LENGTH,
 				   const char * lhp=DEFAULT_LOG_HOME_PATH,
 				   const MILLISECONDS mp=DEFAULT_MONITOR_PERIOD,
 				   const MILLISECONDS lp=DEFAULT_LOG_PERIOD,
-				   const int mqttp=DEFAULT_MQTT_PERIOD,
-				   const char * mbh=DEFAULT_MQTT_HOST):
-					   log_period(lp), monitor_period(mp), mqtt_period(mqttp),
-					   n_buffer_frames(nbf), mqtt_broker_host(mbh), log_home_path(lhp), text_log_filename(tlf) {};
+				   const MILLISECONDS pp=DEFAULT_POLL_PERIOD,
+				   const int dashp=DEFAULT_DASH_PERIOD,
+				   const FileMatrixFactory filef=DEFAULT_FILE_FACTORY,
+				   const DashboardPusherFactory dashf=DEFAULT_DASH_FACTORY):
+					   poll_period(pp), log_period(lp), monitor_period(mp), dash_period(dashp),
+					   n_buffer_frames(nbf), log_home_path(lhp), text_log_filename(tlf), value_log_filename(vlf),
+					   file_fact(filef), dash_fact(dashf) {};
 
-	LogPreferences(const LogPreferences& other): log_period(other.log_period),
+	LogPreferences(const LogPreferences& other): poll_period(other.poll_period),
+												log_period(other.log_period),
 												 monitor_period(other.monitor_period),
-												 mqtt_period(other.mqtt_period),
+												 dash_period(other.dash_period),
 												 n_buffer_frames(other.n_buffer_frames),
-												 mqtt_broker_host(other.mqtt_broker_host),
 												 log_home_path(other.log_home_path),
-												 text_log_filename(other.text_log_filename) {};
+												 text_log_filename(other.text_log_filename),
+												 value_log_filename(other.value_log_filename),
+												 file_fact(other.file_fact),
+												 dash_fact(other.dash_fact) {};
 
 };
 
 
+}
 
 #endif /* SRC_LOGPREFERENCES_H_ */

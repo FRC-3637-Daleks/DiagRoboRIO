@@ -50,6 +50,8 @@ protected:
 	/// Adds pushThread to threads, returns success
 	static const bool AddThread(const ThreadList::TL_HANDLER &pushThread);
 
+	const bool IsInitialized() {return state != ThreadList::INIT;};
+
 };
 
 }

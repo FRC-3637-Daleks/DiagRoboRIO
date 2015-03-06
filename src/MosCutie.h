@@ -50,7 +50,7 @@ private:
 	static unordered_map<string, string> subscriptions;
 
 private:
-	MosCutie(const char * const host=DEFAULT_MQTT_HOST, const int timeout=DEFAULT_MQTT_PERIOD);
+	MosCutie(const char * const host=DEFAULT_MQTT_HOST, const int timeout=DEFAULT_DASH_PERIOD);
 
 public:
 	virtual ~MosCutie() {};

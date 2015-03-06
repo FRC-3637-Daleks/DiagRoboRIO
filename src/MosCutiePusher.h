@@ -8,19 +8,14 @@
 #ifndef SRC_MOSCUTIEPUSHER_H_
 #define SRC_MOSCUTIEPUSHER_H_
 
-#include <memory>
-
-#include "MosCutie.h"
-#include "PollValue.h"
-#include "PushReference.h"
-#include "FramePusher.h"
+#include "DashboardPusher.h"
 
 namespace DRR
 {
 
 using std::weak_ptr;
 
-class MosCutiePusher: public ThreadList
+class MosCutiePusher: public DashboardPusher
 {
 public:
 	static const shared_ptr<MosCutiePusher> Create(const MILLISECONDS p)
@@ -29,34 +24,18 @@ public:
 	}
 
 protected:
-	MosCutiePusher(const MILLISECONDS p): ThreadList(p) {};
-	MosCutiePusher(MosCutiePusher&& other): ThreadList(std::move(other)) {};
+	MosCutiePusher(const MILLISECONDS p): DashboardPusher(p) {};
+	MosCutiePusher(MosCutiePusher&& other): DashboardPusher(std::move(other)) {};
 
 public:
 	virtual ~MosCutiePusher() {};
 
-public:
-	template<typename T>
-	const shared_ptr<PushReference<T>> Add(const Frame::KEY_t key, const weak_ptr<PollValue<T>> &poll, const bool persist=false)
+private:
+	virtual void DoPublish(const Frame::KEY_t& key, const string& value, const int data)
 	{
-		auto pusher(PushReference<T>::Create(poll, [key, persist](const T t) {
-			return MosCutie::Publish(key, DatumValue<T>(t).toString(), persist);
-		}));
-
-		push_back(pusher);
-		return pusher;
-	};
-
-	template<typename T>
-	const shared_ptr<PushReference<T>> Add(const Frame::KEY_t key, const T *val, const bool persist=false)
-	{
-		auto pusher(PushReference<T>::Create(val, [key, persist](const T t) {
-			return MosCutie::Publish(key, DatumValue<T>(t).toString(), persist);
-		}));
-
-		push_back(pusher);
-		return pusher;
+		MosCutie::Publish(key, value, data > 0? true:false);
 	}
+
 };
 
 }
