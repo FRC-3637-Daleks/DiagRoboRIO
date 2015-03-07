@@ -65,6 +65,8 @@ const string LogService::GetRunTimeDirectory()
 	if(ret.empty())
 	{
 		stringstream ss;
+		ss.width(5);
+		ss.fill('0');
 		ss<<GetRunTimeID();
 		ret = ss.str();
 	}
@@ -89,6 +91,8 @@ const string LogService::GetRunTimePath()
 
 const int LogService::Start()
 {
+	DiagnosticService::SetPollPeriod(preferences.poll_period);
+	DiagnosticService::SetMonitorPeriod(preferences.monitor_period);
 	if(!DiagnosticService::Init())
 		return -1;
 	return 0;

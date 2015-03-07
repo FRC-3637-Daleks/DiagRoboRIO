@@ -36,12 +36,17 @@ private:
 private:
 	static void Monitor();
 
-public:
+private:
 	static MILLISECONDS pollPeriod;
 	static MILLISECONDS monitorPeriod;
 
 public:
 	static const bool Init();
+
+	static const MILLISECONDS GetPollPeriod() {return pollPeriod;};
+	static const MILLISECONDS GetMonitorPeriod() {return monitorPeriod;};
+	static void SetPollPeriod(const MILLISECONDS p) {if(!IsInitialized()) pollPeriod = p;};
+	static void SetMonitorPeriod(const MILLISECONDS p) {if(!IsInitialized()) monitorPeriod = p;};
 
 protected:
 	/// Adds poll to poller, returns success
@@ -50,7 +55,7 @@ protected:
 	/// Adds pushThread to threads, returns success
 	static const bool AddThread(const ThreadList::TL_HANDLER &pushThread);
 
-	const bool IsInitialized() {return state != ThreadList::INIT;};
+	static const bool IsInitialized() {return state != ThreadList::INIT;};
 
 };
 

@@ -19,7 +19,7 @@ thread DiagnosticService::monitor(&DiagnosticService::Monitor);
 
 ThreadList::THREAD_STATE DiagnosticService::state(ThreadList::INIT);
 
-MILLISECONDS DiagnosticService::pollPeriod = DEFAULT_LOG_PERIOD;
+MILLISECONDS DiagnosticService::pollPeriod = DEFAULT_POLL_PERIOD;
 MILLISECONDS DiagnosticService::monitorPeriod = DEFAULT_MONITOR_PERIOD;
 
 void DiagnosticService::Monitor()
@@ -59,6 +59,8 @@ void DiagnosticService::Monitor()
 
 const bool DiagnosticService::Init()
 {
+	if(IsInitialized())
+		return false;
 	for(unsigned int i = 0; i < threads.size(); i++)
 	{
 		threads[i]->attachThread(threads[i]);

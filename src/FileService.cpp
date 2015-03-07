@@ -13,9 +13,7 @@ namespace DRR
 
 FileService::FileService(const shared_ptr<FileMatrix> mat): matrix(mat)
 {
-	AddThread(matrix);
-	Add("log/frame_number", &FileService::Tick);
-	Add("log/milliseconds", &FileService::Tock);
+	SetMatrix(matrix);
 }
 
 void FileService::SetMatrix(const shared_ptr<FileMatrix>& mat)
@@ -23,7 +21,8 @@ void FileService::SetMatrix(const shared_ptr<FileMatrix>& mat)
 	if(IsInitialized())
 		return;
 	matrix = mat;
-	AddThread(matrix);
+	if(!AddThread(matrix))
+		return;
 	Add("log/frame_number", &FileService::Tick);
 	Add("log/milliseconds", &FileService::Tock);
 }
