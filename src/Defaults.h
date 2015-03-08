@@ -11,6 +11,7 @@
 #define FRAME_TEXT_WIDTH 7
 #define FLOATING_POINT_SIG_FIGS 8
 #define DEFAULT_LOG_PERIOD 200 	//milliseconds
+#define DEFAULT_MQTT_PERIOD -1	//milliseconds
 #define DEFAULT_DASH_PERIOD 100	//milliseconds
 #define DEFAULT_MONITOR_PERIOD 25   // milliseconds
 #define DEFAULT_POLL_PERIOD 50 // milliseconds
