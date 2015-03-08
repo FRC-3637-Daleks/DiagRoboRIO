@@ -30,6 +30,9 @@ public:
 	typedef shared_ptr<ThreadList> TL_HANDLER;
 
 public:
+	/// Constructs a new thread but doesn't attach it. Returns the the new thread
+	static const TL_HANDLER Create(const LIST_TYPE& listInit, const MILLISECONDS p);
+
 	/// Constructs a new ThreadList and attaches it to itself, returning the thread
 	static const TL_HANDLER Spawn(const LIST_TYPE& listInit, const MILLISECONDS p);
 

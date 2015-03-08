@@ -11,9 +11,15 @@
 namespace DRR
 {
 
-const ThreadList::TL_HANDLER ThreadList::Spawn(const LIST_TYPE& listInit, const MILLISECONDS p)
+const ThreadList::TL_HANDLER ThreadList::Create(const LIST_TYPE& listInit, const MILLISECONDS p)
 {
 	TL_HANDLER ret(new ThreadList(listInit, p));
+	return ret;
+}
+
+const ThreadList::TL_HANDLER ThreadList::Spawn(const LIST_TYPE& listInit, const MILLISECONDS p)
+{
+	TL_HANDLER ret = ThreadList::Create(listInit, p);
 	ret->attachThread(ret);
 	return ret;
 }
@@ -32,8 +38,10 @@ void ThreadList::Restart(TL_HANDLER *handler)
 
 void ThreadList::Thread(const TL_HANDLER list)
 {
+	time_point schedule = getNow();
 	while(list->GetThreadState() != KILL)
 	{
+		schedule = list->period;
 		list->resetTime();
 
 		if(list->GetThreadState() == RUNNING)
@@ -42,7 +50,12 @@ void ThreadList::Thread(const TL_HANDLER list)
 				list->endThread();
 		}
 		if(list->getTimeLeft() > std::chrono::milliseconds::zero())
-			std::this_thread::sleep_for(list->getTimeLeft());
+			std::this_thread::sleep_until(schedule);
+		else
+		{
+			std::this_thread::yield();
+			schedule = getNow();
+		}
 	}
 }
 
