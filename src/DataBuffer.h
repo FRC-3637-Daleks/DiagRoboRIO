@@ -53,7 +53,7 @@ public:
 			return 1;
 		else
 		{
-			data->Set(buf.back());
+			data->Set(buf.front());
 			buf.pop();
 			return 0;
 		}

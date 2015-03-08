@@ -30,6 +30,7 @@ public:
 	virtual ~FileMatrix() {};
 
 public:
+	virtual const int DoAll() override;
 	virtual const int Push() override;
 };
 

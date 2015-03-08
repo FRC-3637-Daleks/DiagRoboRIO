@@ -36,6 +36,7 @@ const int FilePusher::Push()
 
 	if(doubleBuffer[push].rdbuf()->in_avail() > 0)	// Pushes what's in the opposite buffer
 	{
+		std::cout<<"Flushing data to file"<<std::endl;
 		doubleBuffer[push] >> output->rdbuf();
 		doubleBuffer[push].str("");
 		output->flush();

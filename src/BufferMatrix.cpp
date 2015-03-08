@@ -31,9 +31,14 @@ const int BufferMatrix::Add(const Frame::KEY_t& key, const BUFFER_t buf)
 
 const int BufferMatrix::DoAll()
 {
-	int ret;
-	while((ret = ThreadList::DoAll()) == 0);
-	return ret | Push();
+	int ret = 0;
+	while((ret |= ThreadList::DoAll()) == 0)	/// Indicates that there are still more values in the buffer
+	{
+		std::cout<<"Pushing new values to the string buffer"<<std::endl;
+		if(Push() < 0)
+			break;
+	}
+	return ret < 0? -1:0;
 }
 
 

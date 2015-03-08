@@ -20,6 +20,16 @@ FileMatrix::FileMatrix(const string& filename, const MILLISECONDS mils): FilePus
 {
 }
 
+const int FileMatrix::DoAll()
+{
+	int ret = BufferMatrix::DoAll();
+	if(ret < 0)
+		return -1;
+
+	std::cout<<"Flushing current buffer"<<std::endl;
+	return ret | FilePusher::Push();
+}
+
 const int FileMatrix::Push()
 {
 	if(!headers)
@@ -31,7 +41,9 @@ const int FileMatrix::Push()
 	if(!FilePusher::Log(BufferMatrix::GetCurrentFrame().DataString()+'\n'))
 		return -1;
 
-	return FilePusher::Push();
+	std::cout<<"Pushing \""<<BufferMatrix::GetCurrentFrame().DataString()<<"\" into buffer"<<std::endl;
+
+	return 0;
 }
 
 }
