@@ -30,6 +30,7 @@ public:
 	const char * log_home_path;
 	const char * text_log_filename;
 	const char * value_log_filename;
+	const char * text_dashboard_feed;
 	FileMatrixFactory file_fact;
 	DashboardPusherFactory dash_fact;
 
@@ -43,10 +44,11 @@ public:
 				   const MILLISECONDS pp=DEFAULT_POLL_PERIOD,
 				   const int dashp=DEFAULT_DASH_PERIOD,
 				   const FileMatrixFactory filef=DEFAULT_FILE_FACTORY,
-				   const DashboardPusherFactory dashf=DEFAULT_DASH_FACTORY):
+				   const DashboardPusherFactory dashf=DEFAULT_DASH_FACTORY,
+				   const char * const tdf=DEFAULT_DASHBOARD_FEED):
 					   poll_period(pp), log_period(lp), monitor_period(mp), dash_period(dashp),
 					   n_buffer_frames(nbf), log_home_path(lhp), text_log_filename(tlf), value_log_filename(vlf),
-					   file_fact(filef), dash_fact(dashf) {};
+					   text_dashboard_feed(tdf), file_fact(filef), dash_fact(dashf) {};
 
 	LogPreferences(const LogPreferences& other): poll_period(other.poll_period),
 												log_period(other.log_period),
@@ -56,6 +58,7 @@ public:
 												 log_home_path(other.log_home_path),
 												 text_log_filename(other.text_log_filename),
 												 value_log_filename(other.value_log_filename),
+												 text_dashboard_feed(other.text_dashboard_feed),
 												 file_fact(other.file_fact),
 												 dash_fact(other.dash_fact) {};
 

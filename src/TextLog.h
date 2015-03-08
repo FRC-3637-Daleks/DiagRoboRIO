@@ -10,6 +10,7 @@
 
 #include <memory>
 #include <string>
+#include <vector>
 
 #include "PollValue.h"
 
@@ -18,6 +19,7 @@ namespace DRR
 
 using std::shared_ptr;
 using std::string;
+using std::vector;
 
 class LEVEL_t {
 public:
@@ -36,16 +38,18 @@ public:
 class TextLog
 {
 private:
-	static shared_ptr<TextLog> handler;
+	static vector<shared_ptr<TextLog>> listeners;
 	static shared_ptr<PollValue<long long>> stamp;
 
 public:
-	static void SetHandler(const shared_ptr<TextLog> &handle) {handler = handle;};
+	static void AddHandler(const shared_ptr<TextLog> &handle) {listeners.push_back(handle);};
 	static void SetFrameStamp(const shared_ptr<PollValue<long long>> stmp) {stamp = stmp;};
 	static const int Log(const string &service, const LEVEL_t level, const string& message);
 
-public:
+protected:
 	TextLog() {};
+
+public:
 	virtual ~TextLog() {};
 
 protected:

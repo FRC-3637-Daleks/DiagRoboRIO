@@ -34,7 +34,6 @@ const int BufferMatrix::DoAll()
 	int ret = 0;
 	while((ret |= ThreadList::DoAll()) == 0)	/// Indicates that there are still more values in the buffer
 	{
-		std::cout<<"Pushing new values to the string buffer"<<std::endl;
 		if(Push() < 0)
 			break;
 	}

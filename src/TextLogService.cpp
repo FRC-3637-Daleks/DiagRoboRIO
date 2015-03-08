@@ -20,33 +20,35 @@ TextLogService::TextLogService(): textThread(nullptr)
 
 TextLogService::TextLogService(const shared_ptr<TextLog> &toInstall, const shared_ptr<Pusher> &toPush, const MILLISECONDS mils)
 {
-	SetService(toInstall, toPush, mils);
+	AddService(toInstall, toPush, mils);
 }
 
 TextLogService::TextLogService(const string &file, const unsigned int mils)
 {
-	SetService(file, mils);
+	AddService(file, mils);
 }
 
-void TextLogService::SetService(const shared_ptr<TextLog> &toInstall, const shared_ptr<Pusher> &toPush, const unsigned int mils)
+void TextLogService::AddService(const shared_ptr<TextLog> &toInstall, const shared_ptr<Pusher> &toPush, const unsigned int mils)
 {
 	TextLog::SetFrameStamp(DiagnosticService::GetFramePoll());
-	TextLog::SetHandler(toInstall);
+	TextLog::AddHandler(toInstall);
 
 	if(toPush == nullptr)
 		return;
 
-	textThread = ThreadList::Spawn({toPush}, mils);
-	AddThread(textThread);
+	if(textThread == nullptr)
+	{
+		textThread = ThreadList::Create({toPush}, mils);
+		AddThread(textThread);
+	}
+	else
+		textThread->AddToList(toPush);
 }
 
-void TextLogService::SetService(const string &file, const unsigned int mils)
+void TextLogService::AddService(const string &file, const unsigned int mils)
 {
 	auto filePusher = TextLogFile::Create(file);
-	TextLog::SetFrameStamp(DiagnosticService::GetFramePoll());
-	TextLog::SetHandler(filePusher);
-	textThread = ThreadList::Spawn({filePusher}, mils);
-	AddThread(textThread);
+	AddService(filePusher, filePusher, mils);
 }
 
 const int TextLogService::Log(const string &service, const LEVEL_t level, const string &message)

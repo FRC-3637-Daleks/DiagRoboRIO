@@ -28,8 +28,8 @@ public:
 	virtual ~TextLogService() {};
 
 public:
-	void SetService(const shared_ptr<TextLog> &toInstall, const shared_ptr<Pusher> &toPush=nullptr, const MILLISECONDS mils=0.0);
-	void SetService(const string& file, const MILLISECONDS mils);
+	void AddService(const shared_ptr<TextLog> &toInstall, const shared_ptr<Pusher> &toPush=nullptr, const MILLISECONDS mils=0.0);
+	void AddService(const string& file, const MILLISECONDS mils);
 
 	const ThreadList::TL_HANDLER GetThread() const {return textThread;};
 

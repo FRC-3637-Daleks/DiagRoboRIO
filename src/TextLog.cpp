@@ -5,6 +5,7 @@
  *      Author: edward
  */
 
+#include <sstream>
 #include <iostream>
 #include "DiagnosticService.h"
 #include "DatumValue.h"
@@ -25,17 +26,21 @@ const char * LEVEL_t::text[] = {
 };
 
 
-shared_ptr<TextLog> TextLog::handler(new TextLog());
+vector<shared_ptr<TextLog>> TextLog::listeners({shared_ptr<TextLog>(new TextLog())});
 shared_ptr<PollValue<long long>> TextLog::stamp(DiagnosticService::GetFramePoll());
 
 const int TextLog::Log(const string & service, const LEVEL_t level, const string & message)
 {
-	if(!handler)
-		return -1;
-	return handler->LogInternal(
-			DatumValue<long long>(stamp->getPreviousValue()).toString() +
-			string("[")+service+"]["+LEVEL_t::text[level]+"] " +
-			message);
+	std::stringstream ss;
+	ss.width(10);
+	ss.fill('0');
+	ss<<stamp->getPreviousValue()<<": ["<<service<<"]["<<LEVEL_t::text[level]<<"] "<<message;
+
+	int ret = 0;
+	for(int i = 0; i < listeners.size(); i++)
+		ret |= listeners[i]->LogInternal(ss.str());
+
+	return ret;
 }
 
 const int TextLog::LogInternal(const string & message)

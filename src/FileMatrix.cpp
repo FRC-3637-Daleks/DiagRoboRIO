@@ -26,7 +26,6 @@ const int FileMatrix::DoAll()
 	if(ret < 0)
 		return -1;
 
-	std::cout<<"Flushing current buffer"<<std::endl;
 	return ret | FilePusher::Push();
 }
 
@@ -40,8 +39,6 @@ const int FileMatrix::Push()
 	}
 	if(!FilePusher::Log(BufferMatrix::GetCurrentFrame().DataString()+'\n'))
 		return -1;
-
-	std::cout<<"Pushing \""<<BufferMatrix::GetCurrentFrame().DataString()<<"\" into buffer"<<std::endl;
 
 	return 0;
 }

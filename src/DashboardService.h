@@ -43,14 +43,14 @@ public:
 	template<typename T>
 	const shared_ptr<PushReference<T>> Add(const Frame::KEY_t key, const weak_ptr<PollValue<T>>& poll, const int data=0)
 	{
-		auto pushRef = pusher->Add(path+'/'+key, poll, data);
+		auto pushRef = pusher->Add(path.empty()? key:(path+'/'+key), poll, data);
 		return pushRef;
 	}
 
 	template<typename T>
 	const shared_ptr<PushReference<T>> Add(const Frame::KEY_t key, const T *val, const int data=0)
 	{
-		auto pushRef = pusher->Add(path+'/'+key, val, data);
+		auto pushRef = pusher->Add(path.empty()? key:(path+'/'+key), val, data);
 		return pushRef;
 	}
 };

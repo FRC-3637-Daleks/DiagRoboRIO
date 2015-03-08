@@ -13,7 +13,7 @@ namespace DRR
 
 const int TextLogFile::LogInternal(const string & message)
 {
-	if(FilePusher::Log(message));
+	if(FilePusher::Log(message+'\n'));
 		return 0;
 	return -1;
 }

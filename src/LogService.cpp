@@ -5,6 +5,7 @@
  *      Author: edward
  */
 #include <sys/stat.h>
+#include "TextLogMQTT.h"
 #include "LogService.h"
 
 namespace DRR
@@ -91,7 +92,12 @@ const string LogService::GetRunTimePath()
 const int LogService::LogText(const string &service, const LEVEL_t &level, const string &message)
 {
 	if(text.GetThread() == nullptr)
-		text.SetService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
+	{
+		if(preferences.text_log_filename != NULL)
+			text.AddService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
+		if(preferences.text_dashboard_feed != NULL)
+			text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
+	}
 	return text.Log(service, level, message);
 }
 
