@@ -42,6 +42,7 @@ void ThreadList::Thread(const TL_HANDLER list)
 	while(list->GetThreadState() != KILL)
 	{
 		schedule += list->period;
+
 		list->resetTime();
 
 		if(list->GetThreadState() == RUNNING)
