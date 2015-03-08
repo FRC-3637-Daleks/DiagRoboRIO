@@ -13,6 +13,7 @@ namespace DRR
 LogPreferences LogService::preferences;
 FileService LogService::file(nullptr);
 DashboardService LogService::dashboard(nullptr);
+TextLogService LogService::text;
 
 const string LogService::MakeKey(const string& service, const string& component)
 {
@@ -23,8 +24,6 @@ const string LogService::MakeComponentNumber(const string& componenet, const int
 {
 	return componenet+'_'+DatumValue<int>(id).toString();
 }
-
-
 
 const string LogService::GetLogPath()
 {
@@ -87,6 +86,13 @@ const string LogService::GetRunTimePath()
 	}
 
 	return ret;
+}
+
+const int LogService::LogText(const string &service, const LEVEL_t &level, const string &message)
+{
+	if(text.GetThread() == nullptr)
+		text.SetService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
+	return text.Log(service, level, message);
 }
 
 const int LogService::Start()

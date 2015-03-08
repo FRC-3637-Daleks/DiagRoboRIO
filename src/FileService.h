@@ -18,13 +18,6 @@ namespace DRR
 class FileService: private DiagnosticService
 {
 private:
-	static const long long Tick();	///< Returns an incrementing frame id
-	static const long long Tock();	///< Returns the time since its first call in milliseconds
-
-public:
-	static const long long GetTimeElapsed() {return Tock();};
-
-private:
 	shared_ptr<FileMatrix> matrix;
 
 public:

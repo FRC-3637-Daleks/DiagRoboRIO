@@ -23,20 +23,8 @@ void FileService::SetMatrix(const shared_ptr<FileMatrix>& mat)
 	matrix = mat;
 	if(!AddThread(matrix))
 		return;
-	Add("log/frame_number", &FileService::Tick);
-	Add("log/milliseconds", &FileService::Tock);
-}
-
-const long long FileService::Tick()
-{
-	static long long n = 0;
-	return n++;
-}
-
-const long long FileService::Tock()
-{
-	static std::chrono::time_point<std::chrono::system_clock> begin = std::chrono::system_clock::now();
-	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin).count();
+	Add("log/frame_number", &DiagnosticService::GetCurrentFrame);
+	Add("log/milliseconds", &DiagnosticService::GetTimeElapsed);
 }
 
 }

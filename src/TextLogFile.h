@@ -17,10 +17,17 @@ namespace DRR
 class TextLogFile: public TextLog, public FilePusher
 {
 public:
-	TextLogFile(const string& file): FilePusher(file) {};
+	static const shared_ptr<TextLogFile> Create(const string& file)
+	{
+		return shared_ptr<TextLogFile>(new TextLogFile(file));
+	}
 
 protected:
-	virtual const int LogInternal(const string& message) {if(FilePusher::Log(message)) return 0; else return -1;};
+	TextLogFile(const string& file): FilePusher(file) {};
+	TextLogFile(TextLogFile&& other): TextLog(std::move(other)), FilePusher(std::move(other)) {};
+
+protected:
+	virtual const int LogInternal(const string& message);
 };
 
 

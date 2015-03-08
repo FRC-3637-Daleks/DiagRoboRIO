@@ -12,7 +12,7 @@
 #include <vector>
 #include <memory>
 
-#include "Poller.h"
+#include "PollValue.h"
 #include "ThreadList.h"
 #include "FramePusher.h"
 
@@ -28,7 +28,19 @@ using std::thread;
 class DiagnosticService
 {
 private:
+	static const long long Tick();	///< Returns an incrementing frame id
+	static const long long Tock();	///< Returns the time since its first call in milliseconds
+
+public:
+	static const long long GetCurrentFrame();
+	static const long long GetTimeElapsed();
+
+	static const shared_ptr<PollValue<long long> > GetFramePoll() {return ticker;};
+	static const shared_ptr<PollValue<long long> > GetTimePoll() {return tocker;};
+
+private:
 	static vector<shared_ptr<PushPullBase>> pollInit;
+	static shared_ptr<PollValue<long long> > ticker, tocker;
 	static vector<ThreadList::TL_HANDLER> threads;
 	static thread monitor;
 	static ThreadList::THREAD_STATE state;

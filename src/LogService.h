@@ -11,6 +11,7 @@
 #include <functional>
 #include "DashboardService.h"
 #include "FileService.h"
+#include "TextLogService.h"
 #include "LogPreferences.h"
 
 namespace DRR
@@ -22,7 +23,7 @@ private:
 	static LogPreferences preferences;
 	static FileService file;
 	static DashboardService dashboard;
-	//static TextOutputService text;
+	static TextLogService text;
 
 public:
 	static LogPreferences& Preferences() {return preferences;};
@@ -46,6 +47,8 @@ public:
 
 	template<typename T, class SERVICE>
 	static const int AddLog(const string& component, T (SERVICE::*fn)(), SERVICE * const obj, const int dashData=-1);
+
+	static const int LogText(const string& service, const LEVEL_t &level, const string& message);
 
 	static const int Start();
 };

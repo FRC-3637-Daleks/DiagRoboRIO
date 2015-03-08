@@ -5,13 +5,15 @@
  *      Author: edward
  */
 
+#include <iostream>
+#include "DiagnosticService.h"
+#include "DatumValue.h"
 #include "TextLog.h"
 
 namespace DRR
 {
 
-
-const char * [] LEVEL_t::text = {
+const char * LEVEL_t::text[] = {
 		[EMER] = "EMER",
 		[ALERT] = "ALERT",
 		[CRIT] = "CRIT",
@@ -24,12 +26,16 @@ const char * [] LEVEL_t::text = {
 
 
 shared_ptr<TextLog> TextLog::handler(new TextLog());
+shared_ptr<PollValue<long long>> TextLog::stamp(DiagnosticService::GetFramePoll());
 
 const int TextLog::Log(const string & service, const LEVEL_t level, const string & message)
 {
 	if(!handler)
 		return -1;
-	return handler->LogInternal(string("[")+service+"]["+LEVEL_t::text[level]+"] " + message);
+	return handler->LogInternal(
+			DatumValue<long long>(stamp->getPreviousValue()).toString() +
+			string("[")+service+"]["+LEVEL_t::text[level]+"] " +
+			message);
 }
 
 const int TextLog::LogInternal(const string & message)

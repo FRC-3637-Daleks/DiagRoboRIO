@@ -17,6 +17,9 @@ vector<ThreadList::TL_HANDLER> DiagnosticService::threads;
 
 thread DiagnosticService::monitor(&DiagnosticService::Monitor);
 
+shared_ptr<PollValue<long long>> DiagnosticService::ticker(PollValue<long long>::Create(&DiagnosticService::Tick));
+shared_ptr<PollValue<long long>> DiagnosticService::tocker(PollValue<long long>::Create(&DiagnosticService::Tock));
+
 ThreadList::THREAD_STATE DiagnosticService::state(ThreadList::INIT);
 
 MILLISECONDS DiagnosticService::pollPeriod = DEFAULT_POLL_PERIOD;
@@ -65,7 +68,12 @@ const bool DiagnosticService::Init()
 	{
 		threads[i]->attachThread(threads[i]);
 	}
+
+	pollInit.push_back(ticker);
+	pollInit.push_back(tocker);
+
 	threads.push_back(ThreadList::Spawn(pollInit, pollPeriod));
+
 	state = ThreadList::RUNNING;
 	return true;
 }
@@ -92,6 +100,27 @@ const bool DiagnosticService::AddThread(const shared_ptr<ThreadList> &pushThread
 }
 
 
+const long long DiagnosticService::Tick()
+{
+	static long long n = 0;
+	return n++;
+}
+
+const long long DiagnosticService::Tock()
+{
+	static std::chrono::time_point<std::chrono::system_clock> begin = std::chrono::system_clock::now();
+	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - begin).count();
+}
+
+const long long DiagnosticService::GetCurrentFrame()
+{
+	return ticker->getPreviousValue();
+}
+
+const long long DiagnosticService::GetTimeElapsed()
+{
+	return tocker->getPreviousValue();
+}
 
 }
 
