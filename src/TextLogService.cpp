@@ -51,9 +51,9 @@ void TextLogService::AddService(const string &file, const unsigned int mils)
 	AddService(filePusher, filePusher, mils);
 }
 
-const int TextLogService::Log(const string &service, const LEVEL_t level, const string &message)
+const int TextLogService::Log(const string &service, const string &message, const LEVEL_t level)
 {
-	TextLog::Log(service, level, message);
+	TextLog::Log(service, message, level);
 }
 
 }

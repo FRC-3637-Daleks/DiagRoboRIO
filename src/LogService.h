@@ -29,7 +29,7 @@ public:
 	static LogPreferences& Preferences() {return preferences;};
 
 public:
-	static const string MakeComponentNumber(const string& component, const int id);
+	static const string AddID(const string& component, const int id);
 	static const string MakeKey(const string& service, const string& component);
 
 public:
@@ -48,7 +48,7 @@ public:
 	template<typename T, class SERVICE>
 	static const int AddLog(const string& component, T (SERVICE::*fn)(), SERVICE * const obj, const int dashData=-1);
 
-	static const int LogText(const string& service, const LEVEL_t &level, const string& message);
+	static const int LogText(const string& service, const string& message, const LEVEL_t &level=LEVEL_t::INFO);
 
 	static const int Start();
 };

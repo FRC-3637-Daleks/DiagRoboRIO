@@ -29,7 +29,7 @@ const char * LEVEL_t::text[] = {
 vector<shared_ptr<TextLog>> TextLog::listeners({shared_ptr<TextLog>(new TextLog())});
 shared_ptr<PollValue<long long>> TextLog::stamp(DiagnosticService::GetFramePoll());
 
-const int TextLog::Log(const string & service, const LEVEL_t level, const string & message)
+const int TextLog::Log(const string & service, const string & message, const LEVEL_t level)
 {
 	std::stringstream ss;
 	ss.width(10);

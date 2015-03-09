@@ -21,7 +21,7 @@ const string LogService::MakeKey(const string& service, const string& component)
 	return service+'/'+component;
 }
 
-const string LogService::MakeComponentNumber(const string& componenet, const int id)
+const string LogService::AddID(const string& componenet, const int id)
 {
 	return componenet+'_'+DatumValue<int>(id).toString();
 }
@@ -89,16 +89,18 @@ const string LogService::GetRunTimePath()
 	return ret;
 }
 
-const int LogService::LogText(const string &service, const LEVEL_t &level, const string &message)
+const int LogService::LogText(const string &service, const string &message, const LEVEL_t &level)
 {
 	if(text.GetThread() == nullptr)
 	{
 		if(preferences.text_log_filename != NULL)
 			text.AddService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
-		if(preferences.text_dashboard_feed != NULL)
-			text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
+		{
+			if(preferences.text_dashboard_feed != NULL)
+				text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
+		}
 	}
-	return text.Log(service, level, message);
+	return text.Log(service, message, level);
 }
 
 const int LogService::Start()

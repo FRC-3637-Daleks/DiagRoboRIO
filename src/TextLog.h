@@ -44,7 +44,7 @@ private:
 public:
 	static void AddHandler(const shared_ptr<TextLog> &handle) {listeners.push_back(handle);};
 	static void SetFrameStamp(const shared_ptr<PollValue<long long>> stmp) {stamp = stmp;};
-	static const int Log(const string &service, const LEVEL_t level, const string& message);
+	static const int Log(const string &service, const string& message, const LEVEL_t level=LEVEL_t::INFO);
 
 protected:
 	TextLog() {};

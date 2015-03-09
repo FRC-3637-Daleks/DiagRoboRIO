@@ -34,7 +34,7 @@ public:
 	const ThreadList::TL_HANDLER GetThread() const {return textThread;};
 
 public:
-	const int Log(const string &service, const LEVEL_t level, const string& message);
+	const int Log(const string &service, const string& message, const LEVEL_t level=LEVEL_t::INFO);
 };
 
 
