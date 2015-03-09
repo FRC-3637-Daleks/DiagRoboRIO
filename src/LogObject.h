@@ -21,7 +21,7 @@ private:
 	SERVICE *self;
 
 protected:
-	LogObject(): name(NameOf<SERVICE>::name()), self(dynamic_cast<SERVICE>(this)) {};
+	LogObject(): name(NameOf<SERVICE>::name()), self(dynamic_cast<SERVICE*>(this)) {};
 	LogObject(const int ID): name(LogService::AddID(NameOf<SERVICE>::name(), ID)), self(dynamic_cast<SERVICE>(this)) {};
 
 public:
@@ -44,7 +44,7 @@ public:
 		return LogService::AddLog(name, component, std::bind(fn, self, args...), dashData);
 	}
 
-	const int LogText(const string& message, const LEVEL_t &level)
+	const int LogText(const string& message, const LEVEL_t &level=LEVEL_t::INFO)
 	{
 		return LogService::LogText(name, message, level);
 	}
