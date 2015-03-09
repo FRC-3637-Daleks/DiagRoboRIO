@@ -49,6 +49,7 @@ public:
 	static const int AddLog(const string& component, T (SERVICE::*fn)(), SERVICE * const obj, const int dashData=-1);
 
 	static const int LogText(const string& service, const string& message, const LEVEL_t &level=LEVEL_t::INFO);
+	static StreamHandle LogText(const string &service, const LEVEL_t &level=LEVEL_t::INFO);
 
 	static const int Start();
 };

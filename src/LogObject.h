@@ -44,10 +44,11 @@ public:
 		return LogService::AddLog(name, component, std::bind(fn, self, args...), dashData);
 	}
 
-	const int LogText(const string& message, const LEVEL_t &level)
+	const int LogText(const string& message, const LEVEL_t &level=LEVEL_t::INFO)
 	{
 		return LogService::LogText(name, message, level);
 	}
+
 };
 
 

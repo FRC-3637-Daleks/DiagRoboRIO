@@ -94,13 +94,27 @@ const int LogService::LogText(const string &service, const string &message, cons
 	if(text.GetThread() == nullptr)
 	{
 		if(preferences.text_log_filename != NULL)
-			text.AddService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
 		{
+			text.AddService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
 			if(preferences.text_dashboard_feed != NULL)
 				text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
 		}
 	}
 	return text.Log(service, message, level);
+}
+
+StreamHandle LogService::LogText(const string &service, const LEVEL_t &level)
+{
+	if(text.GetThread() == nullptr)
+	{
+		if(preferences.text_log_filename != NULL)
+		{
+			text.AddService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
+			if(preferences.text_dashboard_feed != NULL)
+				text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
+		}
+	}
+	return text.Log(service, level);
 }
 
 const int LogService::Start()

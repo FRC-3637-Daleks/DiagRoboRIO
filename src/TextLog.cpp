@@ -25,7 +25,6 @@ const char * LEVEL_t::text[] = {
 		[DEBUG] = "DEBUG"
 };
 
-
 vector<shared_ptr<TextLog>> TextLog::listeners({shared_ptr<TextLog>(new TextLog())});
 shared_ptr<PollValue<long long>> TextLog::stamp(DiagnosticService::GetFramePoll());
 
@@ -41,6 +40,11 @@ const int TextLog::Log(const string & service, const string & message, const LEV
 		ret |= listeners[i]->LogInternal(ss.str());
 
 	return ret;
+}
+
+StreamHandle TextLog::Log(const string &service, const LEVEL_t level)
+{
+	return StreamHandle(service, level);
 }
 
 const int TextLog::LogInternal(const string & message)
