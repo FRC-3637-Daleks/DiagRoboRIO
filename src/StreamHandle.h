@@ -52,7 +52,7 @@ private:
 	StreamHandle(const string &serv, const LEVEL_t lev): service(serv), level(lev), pushed(false) {};
 
 public:
-	StreamHandle(StreamHandle &&other): service(other.service), level(other.level), buf(other.buf.str()), pushed(other.pushed) {other.pushed = true;};
+	StreamHandle(StreamHandle &&other);
 
 public:
 	virtual ~StreamHandle()
@@ -67,6 +67,8 @@ public:
 	template<typename T>
 	StreamHandle operator<<(const T& val)
 	{
+		if(pushed)
+			return std::move(*this);
 		buf<<val;
 		return std::move(*this);
 	}

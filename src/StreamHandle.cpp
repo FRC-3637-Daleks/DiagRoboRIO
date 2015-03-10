@@ -11,12 +11,18 @@
 namespace DRR
 {
 
+StreamHandle::StreamHandle(StreamHandle && other): service(other.service), level(other.level), pushed(other.pushed)
+{
+	buf << other.buf.str();
+	other.buf.str("");
+	other.pushed = true;
+}
+
 void StreamHandle::Push()
 {
 	TextLog::Log(service, buf.str(), level);
 	pushed = true;
 }
-
 
 }
 

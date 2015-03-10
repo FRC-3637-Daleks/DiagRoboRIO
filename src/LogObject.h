@@ -44,9 +44,20 @@ public:
 		return LogService::AddLog(name, component, std::bind(fn, self, args...), dashData);
 	}
 
+	template<typename T>
+	const int AddLog(const string &component, const std::function<T()> &fn, const int dashData=-1)
+	{
+		return LogService::AddLog(name, component, fn, dashData);
+	}
+
 	const int LogText(const string& message, const LEVEL_t &level=LEVEL_t::INFO)
 	{
 		return LogService::LogText(name, message, level);
+	}
+
+	StreamHandle LogText(const LEVEL_t &level=LEVEL_t::INFO)
+	{
+		return LogService::LogText(name, level);
 	}
 
 };
