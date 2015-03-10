@@ -13,6 +13,7 @@
 #include <vector>
 
 #include "PollValue.h"
+#include "StreamHandle.h"
 
 namespace DRR
 {
@@ -20,20 +21,6 @@ namespace DRR
 using std::shared_ptr;
 using std::string;
 using std::vector;
-
-class LEVEL_t {
-public:
-	enum {EMER=0, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG, NUM_LEVELS};
-	static const char* text[NUM_LEVELS];
-
-private:
-	int value;
-
-public:
-	LEVEL_t(const int v=INFO): value(v) {};
-	LEVEL_t(const LEVEL_t& other)=default;
-	operator const int () const {return value;};
-};
 
 class TextLog
 {
@@ -45,6 +32,7 @@ public:
 	static void AddHandler(const shared_ptr<TextLog> &handle) {listeners.push_back(handle);};
 	static void SetFrameStamp(const shared_ptr<PollValue<long long>> stmp) {stamp = stmp;};
 	static const int Log(const string &service, const string& message, const LEVEL_t level=LEVEL_t::INFO);
+	static StreamHandle Log(const string &service, const LEVEL_t level=LEVEL_t::INFO);
 
 protected:
 	TextLog() {};

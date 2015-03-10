@@ -54,6 +54,7 @@ public:
 	{
 		return LogService::LogText(name, message, level);
 	}
+
 };
 
 

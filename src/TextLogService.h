@@ -35,6 +35,7 @@ public:
 
 public:
 	const int Log(const string &service, const string& message, const LEVEL_t level=LEVEL_t::INFO);
+	StreamHandle Log(const string &service, const LEVEL_t level=LEVEL_t::INFO);
 };
 
 

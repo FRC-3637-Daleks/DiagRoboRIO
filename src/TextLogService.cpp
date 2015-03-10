@@ -56,6 +56,10 @@ const int TextLogService::Log(const string &service, const string &message, cons
 	TextLog::Log(service, message, level);
 }
 
+StreamHandle TextLogService::Log(const string &service, const LEVEL_t level)
+{
+	return TextLog::Log(service, level);
+}
 }
 
 
