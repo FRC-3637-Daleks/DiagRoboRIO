@@ -55,6 +55,11 @@ public:
 		return LogService::LogText(name, message, level);
 	}
 
+	StreamHandle LogText(const LEVEL_t &level=LEVEL_t::INFO)
+	{
+		return LogService::LogText(name, level);
+	}
+
 };
 
 
