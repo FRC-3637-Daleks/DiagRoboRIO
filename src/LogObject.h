@@ -19,14 +19,15 @@ class LogObject
 private:
 	string name;
 	SERVICE *self;
+	static int n;
 
 protected:
-	LogObject(): name(NameOf<SERVICE>::name()), self(dynamic_cast<SERVICE*>(this)) {};
-	LogObject(const int ID): name(LogService::AddID(NameOf<SERVICE>::name(), ID)), self(dynamic_cast<SERVICE>(this)) {};
+	LogObject(): LogObject(dynamic_cast<SERVICE>(this)) {};
+	LogObject(const int ID): LogObject(dynamic_cast<SERVICE>(this), ID) {};
 
 public:
-	LogObject(SERVICE * const obj): name(NameOf<SERVICE>::name()), self(obj) {};
-	LogObject(SERVICE * const obj, const int ID): name(LogService::AddID(NameOf<SERVICE>::name(), ID)), self(obj) {};
+	LogObject(SERVICE * const obj): name(n>0? LogService::AddID(NameOf<SERVICE>::name(), n):NameOf<SERVICE>::name()), self(obj) {n++;};
+	LogObject(SERVICE * const obj, const int ID): name(LogService::AddID(NameOf<SERVICE>::name(), ID)), self(obj) {n++;};
 
 public:
 	virtual ~LogObject() {};
@@ -60,10 +61,14 @@ public:
 		return LogService::LogText(name, level);
 	}
 
+	const string GetName() const
+	{
+		return name;
+	}
+
 };
 
-
-
+template<class SERVICE> int LogObject<SERVICE>::n = 0;
 
 }
 

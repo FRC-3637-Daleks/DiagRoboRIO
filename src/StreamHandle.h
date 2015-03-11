@@ -73,6 +73,25 @@ public:
 		return std::move(*this);
 	}
 
+	template<typename T>
+	StreamHandle& operator<<= (const T& val)
+	{
+		return *this = *this<<val;
+	}
+
+	StreamHandle& operator= (StreamHandle && other)
+	{
+		if(this == &other)
+			return *this;
+		service = other.service;
+		level = other.level;
+		buf.str("");
+		buf << other.buf.str();
+		pushed = other.pushed;
+		other.buf.str("");
+		return *this;
+	}
+
 };
 
 
