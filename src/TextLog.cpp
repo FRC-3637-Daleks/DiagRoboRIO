@@ -14,6 +14,7 @@
 namespace DRR
 {
 
+
 const char * LEVEL_t::text[] = {
 		[EMER] = "EMER",
 		[ALERT] = "ALERT",
@@ -25,15 +26,23 @@ const char * LEVEL_t::text[] = {
 		[DEBUG] = "DEBUG"
 };
 
+
 vector<shared_ptr<TextLog>> TextLog::listeners({shared_ptr<TextLog>(new TextLog())});
-shared_ptr<PollValue<long long>> TextLog::stamp(DiagnosticService::GetFramePoll());
+shared_ptr<PollValue<long long>> TextLog::stamp(nullptr);
 
 const int TextLog::Log(const string & service, const string & message, const LEVEL_t level)
 {
 	std::stringstream ss;
 	ss.width(10);
 	ss.fill('0');
-	ss<<stamp->getPreviousValue()<<": ["<<service<<"]["<<LEVEL_t::text[level]<<"] "<<message;
+	if(stamp == nullptr)
+	{
+		ss<<DiagnosticService::GetTimeElapsed()<<"ms: ["<<service<<"]["<<LEVEL_t::text[level]<<"] "<<message;
+	}
+	else
+	{
+		ss<<stamp->getPreviousValue()<<": ["<<service<<"]["<<LEVEL_t::text[level]<<"] "<<message;
+	}
 
 	int ret = 0;
 	for(int i = 0; i < listeners.size(); i++)

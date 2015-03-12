@@ -30,7 +30,6 @@ TextLogService::TextLogService(const string &file, const unsigned int mils)
 
 void TextLogService::AddService(const shared_ptr<TextLog> &toInstall, const shared_ptr<Pusher> &toPush, const unsigned int mils)
 {
-	TextLog::SetFrameStamp(DiagnosticService::GetTimePoll());
 	TextLog::AddHandler(toInstall);
 
 	if(toPush == nullptr)

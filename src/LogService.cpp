@@ -121,6 +121,7 @@ const int LogService::Start()
 {
 	DiagnosticService::SetPollPeriod(preferences.poll_period);
 	DiagnosticService::SetMonitorPeriod(preferences.monitor_period);
+	TextLog::SetFrameStamp(DiagnosticService::GetFramePoll());
 	if(!DiagnosticService::Init())
 		return -1;
 	return 0;

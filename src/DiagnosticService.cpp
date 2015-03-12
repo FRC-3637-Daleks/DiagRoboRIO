@@ -119,7 +119,7 @@ const long long DiagnosticService::GetCurrentFrame()
 
 const long long DiagnosticService::GetTimeElapsed()
 {
-	return tocker->getPreviousValue();
+	return Tock();
 }
 
 }
