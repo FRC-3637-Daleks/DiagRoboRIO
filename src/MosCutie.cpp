@@ -88,9 +88,8 @@ void MosCutie::on_message(const mosquitto_message * message)
 {
 	if(message == NULL)
 		return;
-	if(message->topic == NULL || message->payload)
+	if(message->topic == NULL || message->payload == NULL)
 		return;
-
 	subscriptions[message->topic] = string((char *)message->payload, message->payloadlen);
 }
 
