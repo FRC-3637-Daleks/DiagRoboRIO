@@ -22,8 +22,8 @@ private:
 	static int n;
 
 protected:
-	LogObject(): LogObject(dynamic_cast<SERVICE>(this)) {};
-	LogObject(const int ID): LogObject(dynamic_cast<SERVICE>(this), ID) {};
+	LogObject(): LogObject(dynamic_cast<SERVICE*>(this)) {};
+	LogObject(const int ID): LogObject(dynamic_cast<SERVICE*>(this), ID) {};
 
 public:
 	LogObject(SERVICE * const obj): name(n>0? LogService::AddID(NameOf<SERVICE>::name(), n):NameOf<SERVICE>::name()), self(obj) {n++;};
