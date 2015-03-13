@@ -42,9 +42,14 @@ const int MosCutie::Subscribe(const string &topic)
 	return GetInstance().subscribe(NULL, topic.c_str());
 }
 
+const bool MosCutie::Has(const string& topic)
+{
+	return subscriptions.count(topic) != 0;
+}
+
 const string MosCutie::Get(const string& topic, const bool sub)
 {
-	if(subscriptions.count(topic) == 0 && sub)
+	if(!Has(topic) && sub)
 	{
 		Subscribe(topic);
 		return string("");

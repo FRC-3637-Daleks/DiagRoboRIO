@@ -40,6 +40,7 @@ public:
 	static const int Publish(const string &topic, const string &value, const bool retain=false);	///< Publishes value to roborio/topic
 	static const int Subscribe(const string &topic);	///< Subscribes to topic
 	static const string Get(const string& topic, const bool sub=false);		///< If not subscribed and sub is true, subscribes to topic, and gets current value in topic
+	static const bool Has(const string& topic);	///< Returns if it has subscribed or received a message for that value
 
 public:
 	static void Init(const int period, const char * host);

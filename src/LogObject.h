@@ -39,11 +39,13 @@ public:
 		return LogService::AddLog(component, fn, self, dashData);
 	}
 
+	/*
 	template<typename T, class... Args>
 	const int AddLog(const string &component, const std::function<T(SERVICE*, Args...)> &fn, Args... args, const int dashData=-1)
 	{
 		return LogService::AddLog(name, component, std::bind(fn, self, args...), dashData);
 	}
+	*/
 
 	template<typename T>
 	const int AddLog(const string &component, const std::function<T()> &fn, const int dashData=-1)
