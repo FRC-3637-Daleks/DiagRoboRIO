@@ -22,8 +22,8 @@ private:
 	static int n;
 
 protected:
-	LogObject(): LogObject(dynamic_cast<SERVICE*>(this)) {};
-	LogObject(const int ID): LogObject(dynamic_cast<SERVICE*>(this), ID) {};
+	LogObject(): LogObject(nullptr) {};	///< nullptr Signifies that child class derives the object
+	LogObject(const int ID): LogObject(nullptr, ID) {};
 
 public:
 	LogObject(SERVICE * const obj): name(n>0? LogService::AddID(NameOf<SERVICE>::name(), n):NameOf<SERVICE>::name()), self(obj) {n++;};
@@ -32,11 +32,19 @@ public:
 public:
 	virtual ~LogObject() {};
 
+private:
+	SERVICE * const getSelf()
+	{
+		if(self == nullptr)
+			self = dynamic_cast<SERVICE*>(this);
+		return self;
+	}
+
 public:
 	template<typename T>
 	const int AddLog(const string &component, T (SERVICE::*fn)(), const int dashData=-1)
 	{
-		return LogService::AddLog(component, fn, self, dashData);
+		return LogService::AddLog(component, fn, getSelf(), dashData);
 	}
 
 	/*
@@ -73,7 +81,5 @@ public:
 template<class SERVICE> int LogObject<SERVICE>::n = 0;
 
 }
-
-
 
 #endif /* SRC_LOGOBJECT_H_ */
