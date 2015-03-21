@@ -56,7 +56,7 @@ private:
 public:
 	virtual ~MosCutie() {};
 
-public:
+private:
 	void on_connect(int rc) override;
 	void on_disconnect(int rc) override;
 	void on_publish(int mid) override;
