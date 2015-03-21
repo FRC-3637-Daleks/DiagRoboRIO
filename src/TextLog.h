@@ -29,7 +29,7 @@ private:
 	static shared_ptr<PollValue<long long>> stamp;
 
 public:
-	static void AddHandler(const shared_ptr<TextLog> &handle) {listeners.push_back(handle);};
+	static void AddListener(const shared_ptr<TextLog> &handle) {listeners.push_back(handle);};
 	static void SetFrameStamp(const shared_ptr<PollValue<long long>> stmp) {stamp = stmp;};
 	static const int Log(const string &service, const string& message, const LEVEL_t level=LEVEL_t::INFO);
 	static StreamHandle Log(const string &service, const LEVEL_t level=LEVEL_t::INFO);
