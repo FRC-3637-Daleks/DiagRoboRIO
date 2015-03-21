@@ -12,8 +12,10 @@
 #include <string>
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 #include "mosquitto/mosquittopp.h"
+#include "MosCutieListener.h"
 #include "Defaults.h"
 
 namespace DRR
@@ -22,12 +24,16 @@ namespace DRR
 using std::string;
 using std::unique_ptr;
 using std::unordered_map;
+using std::vector;
 
 
 /** Static mosquittopp wrapper which uses threaded mosquitto functions and maintains a map of get values
  */
 class MosCutie: public mosqpp::mosquittopp
 {
+public:
+	friend MosCutieListener;
+
 private:
 	static unique_ptr<MosCutie> instance;
 	static MosCutie& GetInstance();
@@ -42,6 +48,10 @@ public:
 	static const string Get(const string& topic, const bool sub=false);		///< If not subscribed and sub is true, subscribes to topic, and gets current value in topic
 	static const bool Has(const string& topic);	///< Returns if it has subscribed or received a message for that value
 
+private:
+	static void AddListener(MosCutieListener * const listen) {listeners.push_back(listen);};
+	static void RemoveListener(MosCutieListener * const listen);
+
 public:
 	static void Init(const int period, const char * host);
 	static void InitHost(const char *host) {Init(initPeriod, host);};
@@ -49,6 +59,7 @@ public:
 
 private:
 	static unordered_map<string, string> subscriptions;
+	static vector<MosCutieListener *> listeners;
 
 private:
 	MosCutie(const char * const host=DEFAULT_MQTT_HOST, const int timeout=DEFAULT_MQTT_PERIOD);
