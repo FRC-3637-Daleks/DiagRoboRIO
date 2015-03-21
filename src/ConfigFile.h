@@ -42,8 +42,8 @@ public:
 		return ret;
 	}
 
-	void SetValue(const string& key, const string& value);	///< Sets or Adds the value to the current configuration
-	template<typename T> void SetValue(const string& key, const T& value)
+	virtual void SetValue(const string& key, const string& value);	///< Sets or Adds the value to the current configuration
+	template<typename T> virtual void SetValue(const string& key, const T& value)
 	{
 		stringstream ss;
 		ss<<value;
