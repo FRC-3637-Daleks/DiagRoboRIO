@@ -66,6 +66,12 @@ public:
 	}
 };
 
+template<typename T>
+class DataBuffer<const T>: public DataBuffer<T>
+{
+
+};
+
 
 }
 

@@ -74,6 +74,15 @@ public:
 	}
 };
 
+template<typename T>
+class PollValue<const T>: public PollValue<T>
+{
+public:
+	PollValue(const typename PollValue<T>::FUNC_t fn): PollValue<T>(fn)  {};
+	PollValue(const PollValue<const T> &other)=delete;
+	virtual ~PollValue() {};
+};
+
 }
 
 
