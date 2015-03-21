@@ -17,6 +17,6 @@ sysProps.xml
 
 *.launch
 
-
+doc/
 
 src/Hardware.h
