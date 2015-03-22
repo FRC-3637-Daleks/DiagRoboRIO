@@ -49,8 +49,10 @@ public:
 	static const bool Has(const string& topic);	///< Returns if it has subscribed or received a message for that value
 
 private:
-	static void AddListener(MosCutieListener * const listen) {listeners.push_back(listen);};
+	static void AddListener(MosCutieListener * const listen);
 	static void RemoveListener(MosCutieListener * const listen);
+	static const string ConvertTopic(const string& top);
+	static const string StripTopic(const string& top);
 
 public:
 	static void Init(const int period, const char * host);

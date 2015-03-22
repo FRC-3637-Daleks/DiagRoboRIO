@@ -13,6 +13,8 @@ namespace DRR
 
 MosCutieListener::MosCutieListener(const string &p): path(p)
 {
+	if(path.back() != '/')
+		path.push_back('/');
 	MosCutie::AddListener(this);
 }
 
@@ -35,6 +37,16 @@ const string MosCutieListener::StripTopic(const string &topic) const
 		return "";
 
 	return topic.substr(path.size());
+}
+
+void MosCutieListener::Publish(const string &topic, const string &value, const bool retain)
+{
+	MosCutie::Publish(GetPath()+topic, value, retain);
+}
+
+const string MosCutieListener::Get(const string &topic)
+{
+	return MosCutie::Get(GetPath()+topic);
 }
 
 }

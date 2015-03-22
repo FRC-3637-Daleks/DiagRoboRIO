@@ -13,27 +13,7 @@ namespace DRR
 
 ConfigFile::ConfigFile(const string& file): filename(file)
 {
-	std::ifstream configFile(filename);
-	if(configFile.fail())	///< Likely first time created file
-		return;
-
-	while(!configFile.eof())
-	{
-		char buf[255];
-		configFile.getline(buf, 255);
-		int separator = -1;
-		int end;
-		for(end = 0; end < 255 && buf[end] != '\0'; end++)
-		{
-			if(buf[end] == ':')
-				separator = end;
-		}
-
-		if(separator < 0)
-			continue;
-
-		config[string(buf, separator)] = string(buf+separator+1, end);
-	}
+	Reload();
 }
 
 const bool ConfigFile::HasValue(const string& key) const
@@ -56,7 +36,7 @@ void ConfigFile::SetValue(const string& key, const string& value)
 
 const int ConfigFile::Save(const string &file)
 {
-	std::ofstream configFile(file);
+	std::ofstream configFile(GetFilePath()+file);
 	if(configFile.fail())
 		return -1;
 
@@ -66,6 +46,33 @@ const int ConfigFile::Save(const string &file)
 	}
 
 	configFile.flush();
+	return 0;
+}
+
+const int ConfigFile::Reload(const string &file)
+{
+	std::ifstream configFile(GetFilePath()+file);
+	if(configFile.fail())	///< Likely first time created file
+		return -1;
+
+	config.clear();
+	while(!configFile.eof())
+	{
+		char buf[255];
+		configFile.getline(buf, 255);
+		int separator = -1;
+		int end;
+		for(end = 0; end < 255 && buf[end] != '\0'; end++)
+		{
+			if(buf[end] == ':')
+				separator = end;
+		}
+		if(separator < 0)
+			continue;
+		//config[string(buf, separator)] = string(buf+separator+1, end);
+		SetValue(string(buf, separator), string(buf+separator+1));
+	}
+
 	return 0;
 }
 

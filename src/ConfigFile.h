@@ -31,6 +31,10 @@ public:
 	virtual ~ConfigFile() {Save();};
 
 public:
+	const string GetFilename() const {return filename;};
+	const string GetFilePath() const {return "/home/lvuser/";};
+
+public:
 	const bool HasValue(const string& key) const;
 
 	const string& GetValue(const string &key, const string& defaultVal = string(""));
@@ -43,16 +47,21 @@ public:
 	}
 
 	virtual void SetValue(const string& key, const string& value);	///< Sets or Adds the value to the current configuration
-	template<typename T> virtual void SetValue(const string& key, const T& value)
+	template<typename T> void SetValue(const string& key, const T& value)
 	{
 		stringstream ss;
 		ss<<value;
 		SetValue(key, ss.str());
 	}
 
+	const unordered_map<string, string>::const_iterator Begin() const {return config.begin();};
+	const unordered_map<string, string>::const_iterator End() const {return config.end();};
+
 public:
 	const int Save(const string& file);
 	const int Save() {return Save(filename);};
+	const int Reload(const string &file);
+	const int Reload() {return Reload(filename);};
 };
 
 
