@@ -89,7 +89,7 @@ const string LogService::GetRunTimePath()
 	return ret;
 }
 
-const int LogService::LogText(const string &service, const string &message, const LEVEL_t &level)
+const int LogService::LogText(const string &service, const string &component, const string &message, const LEVEL_t &level)
 {
 	if(text.GetThread() == nullptr)
 	{
@@ -100,10 +100,10 @@ const int LogService::LogText(const string &service, const string &message, cons
 				text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
 		}
 	}
-	return text.Log(service, message, level);
+	return text.Log(service, component, message, level);
 }
 
-StreamHandle LogService::LogText(const string &service, const LEVEL_t &level)
+StreamHandle LogService::LogText(const string &service, const string &component, const LEVEL_t &level)
 {
 	if(text.GetThread() == nullptr)
 	{
@@ -114,7 +114,7 @@ StreamHandle LogService::LogText(const string &service, const LEVEL_t &level)
 				text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
 		}
 	}
-	return text.Log(service, level);
+	return text.Log(service, component, level);
 }
 
 const int LogService::Start()

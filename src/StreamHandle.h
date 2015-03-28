@@ -43,13 +43,13 @@ public:
 	friend TextLog;
 
 private:
-	string service;
+	string service, instance;
 	LEVEL_t level;
 	ostringstream buf;
 	bool pushed;
 
 private:
-	StreamHandle(const string &serv, const LEVEL_t lev): service(serv), level(lev), pushed(false) {};
+	StreamHandle(const string &serv, const string &inst, const LEVEL_t lev): service(serv), instance(inst), level(lev), pushed(false) {};
 
 public:
 	StreamHandle(StreamHandle &&other);
@@ -84,6 +84,7 @@ public:
 		if(this == &other)
 			return *this;
 		service = other.service;
+		instance = other.instance;
 		level = other.level;
 		buf.str("");
 		buf << other.buf.str();

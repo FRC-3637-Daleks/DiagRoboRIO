@@ -39,7 +39,7 @@ private:
 	mutex sem;	/// Mutex which locks the pollFunc call from ever being called concurrently
 
 protected:
-	PollValue(const FUNC_t& fn): previous(DefaultValue<T>::get()), pollFunc(fn) {};
+	PollValue(const FUNC_t& fn): previous(DefaultValue<T>()), pollFunc(fn) {};
 	PollValue(const PollValue<T>& other)=delete;
 
 public:

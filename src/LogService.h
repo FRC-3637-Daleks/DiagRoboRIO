@@ -13,7 +13,7 @@
  * So if you are done trying to 'optimize' this routine (and failed),
  * please increment the following counter as a warning to the next guy:
  *
- * total_hours_wasted_here: 50
+ * total_hours_wasted_here: 52
  */
 
 #ifndef SRC_LOGSERVICE_H_
@@ -59,8 +59,8 @@ public:
 	template<typename T, class SERVICE>
 	static const int AddLog(const string& component, T (SERVICE::*fn)(), SERVICE * const obj, const int dashData=-1);
 
-	static const int LogText(const string& service, const string& message, const LEVEL_t &level=LEVEL_t::INFO);
-	static StreamHandle LogText(const string &service, const LEVEL_t &level=LEVEL_t::INFO);
+	static const int LogText(const string& service, const string &component, const string& message, const LEVEL_t &level=LEVEL_t::INFO);
+	static StreamHandle LogText(const string &service, const string &component, const LEVEL_t &level=LEVEL_t::INFO);
 
 	static const int Start();
 };
@@ -92,7 +92,7 @@ inline const int LogService::AddLog(const string &service, const string& compone
 template<typename T, class SERVICE>
 inline const int LogService::AddLog(const string &component, T (SERVICE::*fn)(), SERVICE * const obj, const int dashData)
 {
-	return AddLog<T>(NameOf<SERVICE>::name(), component, std::bind(fn, obj), dashData);
+	return AddLog<T>(NameOf<SERVICE>(), component, std::bind(fn, obj), dashData);
 }
 
 }

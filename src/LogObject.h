@@ -8,43 +8,37 @@
 #ifndef SRC_LOGOBJECT_H_
 #define SRC_LOGOBJECT_H_
 
+#include "TextLogObject.h"
 #include "LogService.h"
 
 namespace DRR
 {
 
 template<class SERVICE>
-class LogObject
+class LogObject: public TextLogObject<SERVICE>
 {
-private:
-	string name;
-	SERVICE *self;
-	static int n;
-
 protected:
-	LogObject(): LogObject(nullptr) {};	///< nullptr Signifies that child class derives the object
-	LogObject(const int ID): LogObject(nullptr, ID) {};
+	LogObject() {InitTextLogService();};	///< nullptr Signifies that child class derives the object
+	LogObject(const string &inst): TextLogObject<SERVICE>(inst) {InitTextLogService();};
 
 public:
-	LogObject(SERVICE * const obj): name(n>0? LogService::AddID(NameOf<SERVICE>::name(), n):NameOf<SERVICE>::name()), self(obj) {n++;};
-	LogObject(SERVICE * const obj, const int ID): name(LogService::AddID(NameOf<SERVICE>::name(), ID)), self(obj) {n++;};
+	LogObject(SERVICE * const obj): TextLogObject<SERVICE>(obj) {InitTextLogService();};
+	LogObject(SERVICE * const obj, const string &inst): TextLogObject<SERVICE>(obj, inst) {InitTextLogService();};
 
 public:
 	virtual ~LogObject() {};
 
 private:
-	SERVICE * const getSelf()
+	void InitTextLogService()
 	{
-		if(self == nullptr)
-			self = dynamic_cast<SERVICE*>(this);
-		return self;
+		LogService::LogText("LogService", "0", "Initializing Log Service");
 	}
 
 public:
 	template<typename T>
 	const int AddLog(const string &component, T (SERVICE::*fn)(), const int dashData=-1)
 	{
-		return LogService::AddLog(component, fn, getSelf(), dashData);
+		return LogService::AddLog(LogService::MakeKey(this->GetInstanceName(), component), fn, this->GetSelf(), dashData);
 	}
 
 	/*
@@ -58,27 +52,10 @@ public:
 	template<typename T>
 	const int AddLog(const string &component, const std::function<T()> &fn, const int dashData=-1)
 	{
-		return LogService::AddLog(name, component, fn, dashData);
-	}
-
-	const int LogText(const string& message, const LEVEL_t &level=LEVEL_t::INFO)
-	{
-		return LogService::LogText(name, message, level);
-	}
-
-	StreamHandle LogText(const LEVEL_t &level=LEVEL_t::INFO)
-	{
-		return LogService::LogText(name, level);
-	}
-
-	const string GetName() const
-	{
-		return name;
+		return LogService::AddLog(this->GetName(), LogService::MakeKey(this->GetInstanceName(), component), fn, dashData);
 	}
 
 };
-
-template<class SERVICE> int LogObject<SERVICE>::n = 0;
 
 }
 

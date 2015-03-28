@@ -11,6 +11,7 @@
 
 #include "MosCutie.h"
 
+
 namespace DRR
 {
 unique_ptr<MosCutie> MosCutie::instance(nullptr);
@@ -109,17 +110,17 @@ MosCutie::MosCutie(const char * const host, const int timeout): mosquittopp()
 void MosCutie::on_connect(int rc)
 {
 	if(rc)
-		TextLog::Log("MosCutie", LEVEL_t::NOTICE)<<"MQTT Fail on connect";
+		LogText(LEVEL_t::NOTICE)<<"MQTT Fail on connect";
 	else
-		TextLog::Log("MosCutie", LEVEL_t::NOTICE)<<"MQTT Success on connect";
+		LogText(LEVEL_t::NOTICE)<<"MQTT Success on connect";
 }
 
 void MosCutie::on_disconnect(int rc)
 {
 	if(rc)
-		TextLog::Log("MosCutie", LEVEL_t::NOTICE)<<"MQTT Fail on disconnect";
+		LogText(LEVEL_t::NOTICE)<<"MQTT Fail on disconnect";
 	else
-		TextLog::Log("MosCutie", LEVEL_t::NOTICE)<<"MQTT Success on disconnect";
+		LogText(LEVEL_t::NOTICE)<<"MQTT Success on disconnect";
 }
 
 void MosCutie::on_message(const mosquitto_message * message)

@@ -30,18 +30,18 @@ const char * LEVEL_t::text[] = {
 vector<shared_ptr<TextLog>> TextLog::listeners({shared_ptr<TextLog>(new TextLog())});
 shared_ptr<PollValue<long long>> TextLog::stamp(nullptr);
 
-const int TextLog::Log(const string & service, const string & message, const LEVEL_t level)
+const int TextLog::Log(const string & service, const string &instance, const string & message, const LEVEL_t level)
 {
 	std::stringstream ss;
 	ss.width(10);
 	ss.fill('0');
 	if(stamp == nullptr)
 	{
-		ss<<DiagnosticService::GetTimeElapsed()<<"ms: ["<<service<<"]["<<LEVEL_t::text[level]<<"] "<<message;
+		ss<<DiagnosticService::GetTimeElapsed()<<"ms: ["<<service<<"]["<<instance<<"]["<<LEVEL_t::text[level]<<"] "<<message;
 	}
 	else
 	{
-		ss<<stamp->getPreviousValue()<<": ["<<service<<"]["<<LEVEL_t::text[level]<<"] "<<message;
+		ss<<stamp->getPreviousValue()<<": ["<<service<<"]["<<instance<<"]["<<LEVEL_t::text[level]<<"] "<<message;
 	}
 
 	int ret = 0;
@@ -51,9 +51,9 @@ const int TextLog::Log(const string & service, const string & message, const LEV
 	return ret;
 }
 
-StreamHandle TextLog::Log(const string &service, const LEVEL_t level)
+StreamHandle TextLog::Log(const string &service, const string &instance, const LEVEL_t level)
 {
-	return StreamHandle(service, level);
+	return StreamHandle(service, instance, level);
 }
 
 const int TextLog::LogInternal(const string & message)

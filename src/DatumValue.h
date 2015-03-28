@@ -23,7 +23,7 @@ class DatumValue: public Datum
 private:
 	T value;
 public:
-	DatumValue(const T& init=DefaultValue<T>::get()): value(init) {};
+	DatumValue(const T& init=DefaultValue<T>()): value(init) {};
 	DatumValue(const DatumValue& other): value(other.value) {};
 
 public:
@@ -49,7 +49,7 @@ public:
 
 	virtual const string getType() const
 	{
-		return NameOf<T>::name();
+		return NameOf<T>();
 	}
 
 };

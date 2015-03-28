@@ -17,6 +17,7 @@
 #include "mosquitto/mosquittopp.h"
 #include "MosCutieListener.h"
 #include "Defaults.h"
+#include "TextLogObject.h"
 
 namespace DRR
 {
@@ -29,7 +30,7 @@ using std::vector;
 
 /** Static mosquittopp wrapper which uses threaded mosquitto functions and maintains a map of get values
  */
-class MosCutie: public mosqpp::mosquittopp
+class MosCutie: public mosqpp::mosquittopp, private TextLogObject<MosCutie>
 {
 public:
 	friend MosCutieListener;

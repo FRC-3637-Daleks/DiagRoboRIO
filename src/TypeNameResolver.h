@@ -27,21 +27,23 @@ inline const string demangleType(const string typeName)
 }
 #endif
 
-/// The name of type T can be found at `NameOf<T>::name`.
+/// The name of type T can be found at `NameOf<T>()`.
 template<typename T>
-struct NameOf
+inline const string NameOf()
 {
-	static const string name() {static string n(demangleType(typeid(T).name())); return n;};
-};
+	static string n(demangleType(typeid(T).name()));
+	return n;
+}
 
 template<typename T>
-struct DefaultValue
+inline const T DefaultValue()
 {
-	static const T get() {static T val(0.0); return val;};
-};
+	static T val(0.0);
+	return val;
+}
 
-#define PRIMITIVE_NAME_MACRO(T) template<> struct NameOf<T> { static const string name() {static string n(#T); return n;}; };
-#define DEFAULT_VALUE_MACRO(T, def) template<> struct DefaultValue<T> {static const T get() {static T val(def); return val;}; };
+#define PRIMITIVE_NAME_MACRO(T) template<> inline const string NameOf<T>() {static string n(#T); return n;}
+#define DEFAULT_VALUE_MACRO(T, def) template<> inline const T DefaultValue<T>() {static T val(def); return val;}
 
 PRIMITIVE_NAME_MACRO(bool);
 PRIMITIVE_NAME_MACRO(char);
