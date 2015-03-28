@@ -35,6 +35,7 @@ inline const string NameOf()
 	return n;
 }
 
+
 template<typename T>
 inline const T DefaultValue()
 {
@@ -42,20 +43,20 @@ inline const T DefaultValue()
 	return val;
 }
 
-#define PRIMITIVE_NAME_MACRO(T) template<> inline const string NameOf<T>() {static string n(#T); return n;}
+#define DEFINE_NAMEOF_MACRO(T) template<> inline const string NameOf<T>() {static string n(#T); return n;}
 #define DEFAULT_VALUE_MACRO(T, def) template<> inline const T DefaultValue<T>() {static T val(def); return val;}
 
-PRIMITIVE_NAME_MACRO(bool);
-PRIMITIVE_NAME_MACRO(char);
-PRIMITIVE_NAME_MACRO(short);
-PRIMITIVE_NAME_MACRO(long);
-PRIMITIVE_NAME_MACRO(long long);
-PRIMITIVE_NAME_MACRO(unsigned char);
-PRIMITIVE_NAME_MACRO(unsigned short);
-PRIMITIVE_NAME_MACRO(unsigned long);
-PRIMITIVE_NAME_MACRO(unsigned long long);
-PRIMITIVE_NAME_MACRO(float);
-PRIMITIVE_NAME_MACRO(double);
+DEFINE_NAMEOF_MACRO(bool);
+DEFINE_NAMEOF_MACRO(char);
+DEFINE_NAMEOF_MACRO(short);
+DEFINE_NAMEOF_MACRO(long);
+DEFINE_NAMEOF_MACRO(long long);
+DEFINE_NAMEOF_MACRO(unsigned char);
+DEFINE_NAMEOF_MACRO(unsigned short);
+DEFINE_NAMEOF_MACRO(unsigned long);
+DEFINE_NAMEOF_MACRO(unsigned long long);
+DEFINE_NAMEOF_MACRO(float);
+DEFINE_NAMEOF_MACRO(double);
 
 DEFAULT_VALUE_MACRO(std::string, " ");
 
