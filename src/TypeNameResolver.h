@@ -15,17 +15,8 @@ namespace DRR
 
 using std::string;
 
-#ifndef DEMANGLER
-#define DEMANGLER
-
 /// Removes numbers before typenames, if any. FRC compilers found to mangle class names with numerals preceding source class name
-inline const string demangleType(const string typeName)
-{
-	auto c = typeName.begin();
-	for(; c != typeName.end() && !((*c <= 'Z' && *c >= 'A') || (*c <= 'z' && *c >= 'a') || *c == '_'); c++); // c++! :o
-	return string(c, typeName.end());
-}
-#endif
+const string demangleType(const string typeName);
 
 /// The name of type T can be found at `NameOf<T>()`.
 template<typename T>
