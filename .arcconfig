@@ -1,3 +1,5 @@
 {
-  "phabricator.uri" : "http://phabricator.team3637.com/"
+  "phabricator.uri" : "http://phabricator.team3637.com/",
+  "repository.callsign" : "DRR",
+  "project.name" : "diag_roborio"
 }

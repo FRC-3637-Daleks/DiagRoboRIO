@@ -18,12 +18,15 @@ namespace DRR
 class MessageConfig: private LogObject<MessageConfig>, public MosCutieListener, public ConfigFile
 {
 public:
+	using ConfigFile::SetValue;
+
+public:
 	static const string SaveCommandTopic() {static const string str("__save__"); return str;};
 	static const string RevertCommandTopic() {static const string str("__revert__"); return str;};
 
 public:
 	MessageConfig(const string &file);
-	MessageConfig(MessageConfig &&other): MosCutieListener(other), ConfigFile(std::move(other)), LogObject<MessageConfig>(std::move(other)) {};
+	MessageConfig(MessageConfig &&other): LogObject<MessageConfig>(std::move(other)), MosCutieListener(other), ConfigFile(std::move(other))  {};
 
 public:
 	virtual ~MessageConfig() {};

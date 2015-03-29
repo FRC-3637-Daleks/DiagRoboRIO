@@ -10,6 +10,8 @@
 
 #include <string>
 
+#include "Verifier.h"
+
 namespace DRR
 {
 
@@ -33,12 +35,14 @@ public:
 	const string StripTopic(const string &topic) const;
 
 public:
-	/// Dispatched from MosCutie. `topic` is stripped of path
-	virtual const int Message(const string &topic, const string &value) {return 0;};
+	/// Dispatched from MosCutie. `subtopic` is stripped of path
+	virtual const int Message(const string &subtopic, const string &value) {return 0;};
 
 public:
-	void Publish(const string &topic, const string &value, const bool retain=false);
-	const string Get(const string &topic);
+	void Publish(const string &subtopic, const string &value, const bool retain=false);
+	const bool Has(const string &subtopic);
+	const string Get(const string &subtopic);
+	const bool AddVerifier(const string& subtopic, const Verifier& ver);
 };
 
 

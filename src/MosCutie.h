@@ -16,6 +16,7 @@
 
 #include "mosquitto/mosquittopp.h"
 #include "MosCutieListener.h"
+#include "Verifier.h"
 #include "Defaults.h"
 #include "TextLogObject.h"
 
@@ -36,6 +37,19 @@ public:
 	friend MosCutieListener;
 
 private:
+	struct VerifiedValue
+	{
+		string value;
+		Verifier verify;
+		VerifiedValue() {};
+		VerifiedValue(const string& val, const Verifier& ver): value(val), verify(ver) {};
+		VerifiedValue(const string& val): value(val) {};
+		VerifiedValue(const VerifiedValue& other): value(other.value), verify(other.verify) {};
+		VerifiedValue(VerifiedValue &&other): value(other.value), verify(other.verify) {};
+		operator string&() {return value;};
+	};
+
+private:
 	static unique_ptr<MosCutie> instance;
 	static MosCutie& GetInstance();
 
@@ -44,7 +58,7 @@ private:
 	static bool init;
 
 public:
-	static const int Publish(const string &topic, const string &value, const bool retain=false);	///< Publishes value to roborio/topic
+	static const int Publish(const string &topic, const string &value, const bool retain=false);	///< Publishes value to topic
 	static const int Subscribe(const string &topic);	///< Subscribes to topic
 	static const string Get(const string& topic, const bool sub=false);		///< If not subscribed and sub is true, subscribes to topic, and gets current value in topic
 	static const bool Has(const string& topic);	///< Returns if it has subscribed or received a message for that value
@@ -56,12 +70,20 @@ private:
 	static const string StripTopic(const string& top);
 
 public:
+	static const bool AddVerifier(const string& topic, const Verifier& ver);
+	template<typename T>
+	static const bool AddVerifier(const string& topic, const std::function<const bool(const T&)> &fn)
+	{
+		return AddVerifier(topic, Verifier(fn));
+	}
+
+public:
 	static void Init(const int period, const char * host);
 	static void InitHost(const char *host) {Init(initPeriod, host);};
 	static void InitPeriod(const int period) {Init(period, initHost);};
 
 private:
-	static unordered_map<string, string> subscriptions;
+	static unordered_map<string, VerifiedValue> subscriptions;
 	static vector<MosCutieListener *> listeners;
 
 private:

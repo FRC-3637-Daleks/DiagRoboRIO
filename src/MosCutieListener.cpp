@@ -39,14 +39,24 @@ const string MosCutieListener::StripTopic(const string &topic) const
 	return topic.substr(path.size());
 }
 
-void MosCutieListener::Publish(const string &topic, const string &value, const bool retain)
+void MosCutieListener::Publish(const string &subtopic, const string &value, const bool retain)
 {
-	MosCutie::Publish(GetPath()+topic, value, retain);
+	MosCutie::Publish(GetPath()+subtopic, value, retain);
 }
 
-const string MosCutieListener::Get(const string &topic)
+const bool MosCutieListener::Has(const string &subtopic)
 {
-	return MosCutie::Get(GetPath()+topic);
+	return MosCutie::Has(GetPath()+subtopic);
+}
+
+const string MosCutieListener::Get(const string &subtopic)
+{
+	return MosCutie::Get(GetPath()+subtopic);
+}
+
+const bool MosCutieListener::AddVerifier(const string &subtopic, const Verifier &ver)
+{
+	return MosCutie::AddVerifier(GetPath()+subtopic, ver);
 }
 
 }

@@ -12,15 +12,17 @@ namespace DRR
 
 MessageConfig::MessageConfig(const string &file): LogObject<MessageConfig>(file), MosCutieListener(string("roborio/config/")+file), ConfigFile(file)
 {
-	Publish(SaveCommandTopic(), "0");
-	Publish(RevertCommandTopic(), "0");
+	Publish(SaveCommandTopic(), "0", true);
+	Publish(RevertCommandTopic(), "0", true);
 	LogText()<<"Created MessageConfig for "<<file;
+	Reload();
 }
 
 void MessageConfig::SetValue(const string &key, const string &value)
 {
 	LogText()<<"Setting "<<key<<" to "<<value;
-	Publish(key, value);
+	ConfigFile::SetValue(key, value);
+	Publish(key, value, true);
 }
 
 const int MessageConfig::Message(const string &topic, const string &value)
@@ -49,12 +51,13 @@ const int MessageConfig::Message(const string &topic, const string &value)
 		}
 
 
-		Publish(SaveCommandTopic(), "0");
+		Publish(SaveCommandTopic(), "0", true);
 	}
 	else if(topic == RevertCommandTopic())
 	{
 		if(value == "0")
 			return 0;
+
 		if(value == "1")
 		{
 			ret = Reload();	// If the value is 1, it uses the original file
@@ -72,9 +75,9 @@ const int MessageConfig::Message(const string &topic, const string &value)
 				LogText()<<"Reverted from "<<value;
 		}
 
-		Publish(RevertCommandTopic(), "0");
+		Publish(RevertCommandTopic(), "0", true);
 	}
-	else
+	else if(GetValue(topic) != value)
 	{
 		ConfigFile::SetValue(topic, value);
 		LogText()<<"Setting \""<<topic<<"\" to \""<<value<<"\"";

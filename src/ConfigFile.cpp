@@ -52,8 +52,11 @@ const int ConfigFile::Save(const string &file)
 const int ConfigFile::Reload(const string &file)
 {
 	std::ifstream configFile(GetFilePath()+file);
-	if(configFile.fail())	///< Likely first time created file
+	if(configFile.fail())	//< Likely first time created file
 		return -1;
+
+	for(auto i = config.begin(); i != config.end(); i++)	// Empties each config value first as per MessageConfig protocol
+		SetValue(i->first, "");
 
 	config.clear();
 	while(!configFile.eof())

@@ -16,7 +16,7 @@ namespace DRR
 {
 unique_ptr<MosCutie> MosCutie::instance(nullptr);
 
-unordered_map<string, string> MosCutie::subscriptions;
+unordered_map<string, MosCutie::VerifiedValue> MosCutie::subscriptions;
 vector<MosCutieListener *> MosCutie::listeners;
 
 int MosCutie::initPeriod(-1);
@@ -63,6 +63,12 @@ const string MosCutie::Get(const string& topic, const bool sub)
 	{
 		return subscriptions.at(ConvertTopic(topic));
 	}
+}
+
+const bool MosCutie::AddVerifier(const string &topic, const Verifier &ver)
+{
+	subscriptions[topic].verify = ver;
+	return true;
 }
 
 void MosCutie::Init(const int period, const char *host)
@@ -115,7 +121,13 @@ void MosCutie::on_connect(int rc)
 	if(rc)
 		LogText(LEVEL_t::NOTICE)<<"MQTT Fail on connect";
 	else
+	{
 		LogText(LEVEL_t::NOTICE)<<"MQTT Success on connect";
+		for(auto i = subscriptions.begin(); i != subscriptions.end(); i++)
+		{
+			Publish(i->first, i->second.value);
+		}
+	}
 }
 
 void MosCutie::on_disconnect(int rc)
@@ -132,7 +144,14 @@ void MosCutie::on_message(const mosquitto_message * message)
 		return;
 	if(message->topic == NULL || message->payload == NULL)
 		return;
-	string val = subscriptions[message->topic] = string((char *)message->payload, message->payloadlen);
+	string val = string((char *)message->payload, message->payloadlen);
+	if(subscriptions[message->topic].verify.Verify(val))
+		subscriptions[message->topic].value = val;
+	else
+	{
+		Publish(message->topic, subscriptions[message->topic].value);
+		return;
+	}
 	string top = StripTopic(message->topic);
 
 	for(int i = 0; i < listeners.size(); i++)
