@@ -24,14 +24,18 @@ protected:
 public:
 	LogObject(SERVICE * const obj): TextLogObject<SERVICE>(obj) {InitTextLogService();};
 	LogObject(SERVICE * const obj, const string &inst): TextLogObject<SERVICE>(obj, inst) {InitTextLogService();};
+	LogObject(LogObject&& other): TextLogObject<SERVICE>(std::move(other)) {};
 
 public:
 	virtual ~LogObject() {};
 
 private:
-	void InitTextLogService()
+	static void InitTextLogService()
 	{
-		LogService::LogText("LogService", "0", "Initializing Log Service");
+		static bool called = false;
+		if(!called)
+			LogService::LogText("LogService", "", "Initializing Log Service");
+		called = true;
 	}
 
 public:

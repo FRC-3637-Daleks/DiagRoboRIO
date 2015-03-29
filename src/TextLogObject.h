@@ -15,15 +15,16 @@ namespace DRR
 {
 
 template<class SERVICE>
-class TextLogObject: virtual public LogObjectBase<SERVICE>
+class TextLogObject: public LogObjectBase<SERVICE>
 {
 protected:
-	TextLogObject() {}; // nullptr Signifies that child class derives the object
+	TextLogObject(): LogObjectBase<SERVICE>(nullptr) {};
 	TextLogObject(const string& instName): LogObjectBase<SERVICE>(instName) {};
 
 public:
 	TextLogObject(SERVICE * const obj): LogObjectBase<SERVICE>(obj) {};
 	TextLogObject(SERVICE * const obj, const string& instName): LogObjectBase<SERVICE>(obj, instName) {};
+	TextLogObject(TextLogObject &&other): LogObjectBase<SERVICE>(std::move(other)) {};
 
 public:
 	virtual ~TextLogObject() {};

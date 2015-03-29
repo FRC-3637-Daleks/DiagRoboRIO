@@ -8,6 +8,7 @@
 #ifndef SRC_LOGOBJECTBASE_H_
 #define SRC_LOGOBJECTBASE_H_
 
+#include <iostream>
 #include <string>
 
 #include "DatumValue.h"
@@ -50,6 +51,7 @@ protected:
 public:
 	LogObjectBase(SERVICE * const obj): LogObjectBase(obj, DatumValue<int>(N).toString()) {};
 	LogObjectBase(SERVICE * const obj, const string& instName): self(obj), instance(instName) {N++;};
+	LogObjectBase(LogObjectBase &&other): self(other.self), instance(std::move(other.instance)) {};
 
 public:
 	virtual ~LogObjectBase() {N--;};

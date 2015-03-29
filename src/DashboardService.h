@@ -27,7 +27,8 @@ private:
 	string path;
 
 public:
-	DashboardService(const shared_ptr<DashboardPusher>& push, const string& p = string("")): pusher(push), path(p)
+	DashboardService(const shared_ptr<DashboardPusher>& push, const string& p = string("roborio")):
+		TextLogObject<DashboardService>(p), pusher(push), path(p)
 	{
 		LogText()<<"Created for path: "<<path;
 		if(!AddThread(pusher))

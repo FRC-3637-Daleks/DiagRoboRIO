@@ -87,11 +87,13 @@ void MosCutie::RemoveListener(MosCutieListener * const listen)
 
 const string MosCutie::ConvertTopic(const string &top)
 {
-	return string("roborio/")+top;
+	return top;
 }
 
 const string MosCutie::StripTopic(const string &top)
 {
+	return top;
+	/*
 	static const string prefix("roborio/");
 	if(top.size() > prefix.size())
 	{
@@ -99,6 +101,7 @@ const string MosCutie::StripTopic(const string &top)
 			return top.substr(prefix.size());
 	}
 	return "";
+	*/
 }
 
 MosCutie::MosCutie(const char * const host, const int timeout): mosquittopp()

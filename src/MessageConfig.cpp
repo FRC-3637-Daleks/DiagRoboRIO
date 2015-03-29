@@ -10,7 +10,7 @@
 namespace DRR
 {
 
-MessageConfig::MessageConfig(const string &file): MosCutieListener(file), ConfigFile(file)
+MessageConfig::MessageConfig(const string &file): LogObject<MessageConfig>(file), MosCutieListener(string("roborio/config/")+file), ConfigFile(file)
 {
 	Publish(SaveCommandTopic(), "0");
 	Publish(RevertCommandTopic(), "0");
@@ -19,13 +19,13 @@ MessageConfig::MessageConfig(const string &file): MosCutieListener(file), Config
 
 void MessageConfig::SetValue(const string &key, const string &value)
 {
-	LogText()<<"["<<GetFilename()<<"] Setting "<<key<<" to "<<value;
+	LogText()<<"Setting "<<key<<" to "<<value;
 	Publish(key, value);
 }
 
 const int MessageConfig::Message(const string &topic, const string &value)
 {
-	LogText()<<"["<<GetFilename()<<"] Received message \""<<topic<<"\"=\""<<value<<"\"";
+	LogText()<<"Received message \""<<topic<<"\"=\""<<value<<"\"";
 	int ret = 0;
 	if(topic == SaveCommandTopic())
 	{
@@ -35,17 +35,17 @@ const int MessageConfig::Message(const string &topic, const string &value)
 		{
 			ret = Save();	// If the value is 1, it uses the original file
 			if(ret < 0)
-				LogText(LEVEL_t::ALERT)<<"["<<GetFilename()<<"] Saving to "<<GetFilename()<<" failed";
+				LogText(LEVEL_t::ALERT)<<"Saving to "<<GetFilename()<<" failed";
 			else
-				LogText()<<"["<<GetFilename()<<"] Saved to "<<GetFilename();
+				LogText()<<"Saved to "<<GetFilename();
 		}
 		else
 		{
 			ret = Save(value);	// Otherwise it assumes the value is the filename it wants it saved to
 			if(ret < 0)
-				LogText(LEVEL_t::ALERT)<<"["<<GetFilename()<<"] Saving to "<<value<<" failed";
+				LogText(LEVEL_t::ALERT)<<"Saving to "<<value<<" failed";
 			else
-				LogText()<<"["<<GetFilename()<<"] Saved to "<<value;
+				LogText()<<"Saved to "<<value;
 		}
 
 
@@ -59,17 +59,17 @@ const int MessageConfig::Message(const string &topic, const string &value)
 		{
 			ret = Reload();	// If the value is 1, it uses the original file
 			if(ret < 0)
-				LogText(LEVEL_t::ALERT)<<"["<<GetFilename()<<"] Reverting from "<<GetFilename()<<" failed";
+				LogText(LEVEL_t::ALERT)<<"Reverting from "<<GetFilename()<<" failed";
 			else
-				LogText()<<"["<<GetFilename()<<"] Reverted from "<<GetFilename();
+				LogText()<<"Reverted from "<<GetFilename();
 		}
 		else
 		{
 			ret = Reload(value);	// Otherwise it assumes the value is the filename it wants it to load from
 			if(ret < 0)
-				LogText(LEVEL_t::ALERT)<<"["<<GetFilename()<<"] Reverting from "<<value <<" failed";
+				LogText(LEVEL_t::ALERT)<<"Reverting from "<<value <<" failed";
 			else
-				LogText()<<"["<<GetFilename()<<"] Reverted from "<<value;
+				LogText()<<"Reverted from "<<value;
 		}
 
 		Publish(RevertCommandTopic(), "0");
@@ -77,15 +77,10 @@ const int MessageConfig::Message(const string &topic, const string &value)
 	else
 	{
 		ConfigFile::SetValue(topic, value);
-		LogText()<<"["<<GetFilename()<<"] Setting \""<<topic<<"\" to \""<<value<<"\"";
+		LogText()<<"Setting \""<<topic<<"\" to \""<<value<<"\"";
 	}
 
 	return ret;
 }
 
-
-
-
 }
-
-
