@@ -142,13 +142,18 @@ void MosCutie::on_message(const mosquitto_message * message)
 {
 	if(message == NULL)
 		return;
-	if(message->topic == NULL || message->payload == NULL)
+	if(message->topic == NULL)
 		return;
-	string val = string((char *)message->payload, message->payloadlen);
+
+	string val("");
+	if(message->payload != NULL)
+		val = string((char *)message->payload, message->payloadlen);
+
 	if(subscriptions[message->topic].verify.Verify(val))
 		subscriptions[message->topic].value = val;
 	else
 	{
+		LogText(LEVEL_t::ALERT)<<"The value \""<<val<<"\" does not pass the verification for the topic \""<<message->topic<<"\"";
 		Publish(message->topic, subscriptions[message->topic].value);
 		return;
 	}

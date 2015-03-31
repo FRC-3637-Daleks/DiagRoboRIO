@@ -12,17 +12,36 @@ namespace DRR
 
 MessageConfig::MessageConfig(const string &file): LogObject<MessageConfig>(file), MosCutieListener(string("roborio/config/")+file), ConfigFile(file)
 {
+	LogText()<<"Created MessageConfig for "<<file;
 	Publish(SaveCommandTopic(), "0", true);
 	Publish(RevertCommandTopic(), "0", true);
-	LogText()<<"Created MessageConfig for "<<file;
+	Publish(SetCommandTopic(), "0", true);
 	Reload();
+	LogText()<<"Constructor Complete";
 }
 
 void MessageConfig::SetValue(const string &key, const string &value)
 {
-	LogText()<<"Setting "<<key<<" to "<<value;
-	ConfigFile::SetValue(key, value);
+	LogText()<<"Publishing \""<<key<<"\" = \""<<value<<"\"";
+	/*if(!HasValue(key))	TODO: Add read only verifier
+		this->AddVerifier(key, Verifier::)
+		*/
+	setValue(key, value);
 	Publish(key, value, true);
+}
+
+void MessageConfig::RemoveValue(const string &key)
+{
+	if(!HasValue(key))
+	{
+		LogText()<<"Cannot remove \""<<key<<"\" because it does not exist";
+	}
+	else
+	{
+		LogText()<<"Removing \""<<key<<"\" from global table";
+		removeValue(key);
+		Publish(key, "", true);
+	}
 }
 
 const int MessageConfig::Message(const string &topic, const string &value)
@@ -77,10 +96,32 @@ const int MessageConfig::Message(const string &topic, const string &value)
 
 		Publish(RevertCommandTopic(), "0", true);
 	}
-	else if(GetValue(topic) != value)
+	else if(topic == SetCommandTopic())
 	{
-		ConfigFile::SetValue(topic, value);
-		LogText()<<"Setting \""<<topic<<"\" to \""<<value<<"\"";
+		if(value == "0")
+			return 0;
+
+		LogText()<<"Received request: "<<value;
+
+		auto split = value.find(' ');
+		if(split != value.npos)
+		{
+			string setTopic(value, 0, split);
+			string setValue(value, split+1);
+
+			if(!HasValue(setTopic))
+				LogText(LEVEL_t::NOTICE)<<"Adding \""<<setTopic<<"\"";
+			LogText()<<"Setting \""<<setTopic<<"\" to \""<<setValue<<"\"";
+			SetValue(setTopic, setValue);
+		}
+		else if(split == value.npos)
+		{
+			string removeTopic(value);
+			LogText()<<"Removing \""<<removeTopic<<"\"";
+			RemoveValue(removeTopic);
+		}
+
+		Publish(SetCommandTopic(), "0", true);
 	}
 
 	return ret;

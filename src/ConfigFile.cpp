@@ -21,6 +21,13 @@ const bool ConfigFile::HasValue(const string& key) const
 	return config.count(key);
 }
 
+const string ConfigFile::GetValue(const string &key) const
+{
+	if(!HasValue(key))
+		return "";
+	return config.at(key);
+}
+
 const string& ConfigFile::GetValue(const string &key, const string& defaultVal)
 {
 	if(!HasValue(key))
@@ -29,9 +36,14 @@ const string& ConfigFile::GetValue(const string &key, const string& defaultVal)
 	return config.at(key);
 }
 
-void ConfigFile::SetValue(const string& key, const string& value)
+void ConfigFile::setValue(const string& key, const string& value)
 {
 	config[key] = value;
+}
+
+void ConfigFile::removeValue(const string& key)
+{
+	config.erase(key);
 }
 
 const int ConfigFile::Save(const string &file)

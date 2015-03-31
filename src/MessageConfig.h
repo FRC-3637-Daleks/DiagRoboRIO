@@ -21,8 +21,9 @@ public:
 	using ConfigFile::SetValue;
 
 public:
-	static const string SaveCommandTopic() {static const string str("__save__"); return str;};
-	static const string RevertCommandTopic() {static const string str("__revert__"); return str;};
+	static const string& SaveCommandTopic() {static const string str("__save__"); return str;};
+	static const string& RevertCommandTopic() {static const string str("__revert__"); return str;};
+	static const string& SetCommandTopic() {static const string str("__set__"); return str;};
 
 public:
 	MessageConfig(const string &file);
@@ -33,6 +34,7 @@ public:
 
 public:
 	virtual void SetValue(const string &key, const string& value) override;
+	virtual void RemoveValue(const string &key) override;
 	virtual const int Message(const string &topic, const string& value) override;
 };
 

@@ -8,6 +8,7 @@
 #ifndef SRC_TYPENAMERESOLVER_H_
 #define SRC_TYPENAMERESOLVER_H_
 
+#include <typeinfo>
 #include <string>
 
 namespace DRR
