@@ -21,7 +21,15 @@ class Verifier
 {
 public:
 	typedef std::function<const bool(const string&)> CHECK_t;
+
+private:
 	static const bool DoNothing(const string &in) {return true;};
+	static const bool ReadOnly(const string &in) {return false;};
+
+public:
+	static const Verifier do_nothing;
+	static const Verifier read_only;
+
 	template<typename T>
 	static const Verifier Convert(const std::function<const bool(const T&)> &chk)
 	{

@@ -23,9 +23,8 @@ MessageConfig::MessageConfig(const string &file): LogObject<MessageConfig>(file)
 void MessageConfig::SetValue(const string &key, const string &value)
 {
 	LogText()<<"Publishing \""<<key<<"\" = \""<<value<<"\"";
-	/*if(!HasValue(key))	TODO: Add read only verifier
-		this->AddVerifier(key, Verifier::)
-		*/
+	if(!HasValue(key))
+		AddVerifier(key, Verifier::read_only);
 	setValue(key, value);
 	Publish(key, value, true);
 }
