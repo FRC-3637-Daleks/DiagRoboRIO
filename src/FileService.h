@@ -15,8 +15,11 @@
 namespace DRR
 {
 
-class FileService: private DiagnosticService
+class FileService: private DiagnosticService, private TextLogObject<FileService>
 {
+private:
+	using TextLogObject<FileService>::LogText;
+
 private:
 	shared_ptr<FileMatrix> matrix;
 
@@ -43,6 +46,7 @@ public:
 	{
 		auto pushFN = matrix->Add<T>(name);
 		auto ret(BufferPoll<T>::Create(fn, pushFN));
+		LogText()<<"Adding Poll \""<<name<<" of type "<<NameOf<T>();
 		AddPoll(ret);
 		return ret;
 	};

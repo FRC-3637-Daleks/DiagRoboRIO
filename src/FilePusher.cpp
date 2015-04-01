@@ -10,7 +10,7 @@
 namespace DRR
 {
 
-FilePusher::FilePusher(FilePusher &&other): output(other.output.release()),
+FilePusher::FilePusher(FilePusher &&other): name(std::move(other.name)), output(other.output.release()),
 		doubleBuffer(std::move(other.doubleBuffer)), flip(other.flip)
 {
 }
@@ -36,7 +36,6 @@ const int FilePusher::Push()
 
 	if(doubleBuffer[push].rdbuf()->in_avail() > 0)	// Pushes what's in the opposite buffer
 	{
-		std::cout<<"Flushing data to file"<<std::endl;
 		doubleBuffer[push] >> output->rdbuf();
 		doubleBuffer[push].str("");
 		output->flush();

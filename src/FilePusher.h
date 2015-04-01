@@ -29,16 +29,20 @@ using std::shared_ptr;
 class FilePusher: virtual public Pusher
 {
 private:
+	string name;
 	unique_ptr<ostream> output;
 	unique_ptr<stringstream[]> doubleBuffer;
 	bool flip;
 
 public:
-	FilePusher(const string& filename): output(std::make_unique<ofstream>(filename)), doubleBuffer(new stringstream[2]), flip(0) {std::cout<<"Opening "<<filename<<std::endl;};
+	FilePusher(const string& filename): name(filename), output(std::make_unique<ofstream>(filename)), doubleBuffer(new stringstream[2]), flip(0) {std::cout<<"Opening "<<filename<<std::endl;};
 	FilePusher(FilePusher&& other);
 
 public:
 	virtual ~FilePusher() {};
+
+public:
+	const string& GetFileName() const {return name;};
 
 public:
 	const bool Log(const string& text);

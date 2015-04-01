@@ -32,13 +32,22 @@ public:
 private:
 	static void InitTextLogService()
 	{
-		static bool called = false;
-		if(!called)
-			LogService::LogText("LogService", "", "Initializing Log Service");
-		called = true;
+		LogService::InitTextLogging();
 	}
 
 public:
+	template<typename T>
+	static const int StaticAddLog(const string &component, T (*fn)(), const int dashData=-1)
+	{
+		return LogService::AddLog(LogObjectBase<SERVICE>::GetName(), component, fn, dashData);
+	}
+
+	template<typename T>
+	static const int StaticAddLog(const string &component, const std::function<T()> &fn, const int dashData=-1)
+	{
+		return LogService::AddLog(LogObjectBase<SERVICE>::GetName(), component, fn, dashData);
+	}
+
 	template<typename T>
 	const int AddLog(const string &component, T (SERVICE::*fn)(), const int dashData=-1)
 	{

@@ -33,9 +33,8 @@ void DiagnosticService::Monitor()
 
 	for(unsigned int i = 0; i < threads.size(); i++)
 	{
-		std::cout<<"Starting thread "<<i<<std::endl;
+		StaticLogText()<<"Starting thread "<<i;
 		threads[i]->Start();
-		std::cout<<"Thread Started "<<i<<std::endl;
 	}
 
 
@@ -46,7 +45,8 @@ void DiagnosticService::Monitor()
 			// If the thread is running but exceeds its timeout, restart it
 			if(threads[i]->exceedsTimeout() && threads[i]->GetThreadState() == ThreadList::RUNNING)
 			{
-				std::cout<<"Thread timed out. Average Period micros: "<<threads[i]->GetAveragePeriod().count()<<"Max Time in millis"<<threads[i]->GetMaxTime().count()<<std::endl;
+				StaticLogText(LEVEL_t::CRIT)<<"Thread timed out. Average Period micros: "<<threads[i]->GetAveragePeriod().count()<<". Max Time in millis: "<<threads[i]->GetMaxTime().count();
+				StaticLogText(LEVEL_t::CRIT)<<"Thread "<<i<<" fell behind on element "<<threads[i]->GetIteration();
 				ThreadList::Restart(&threads[i]);
 			}
 		}
@@ -64,6 +64,8 @@ const bool DiagnosticService::Init()
 {
 	if(IsInitialized())
 		return false;
+
+	StaticLogText()<<"Starting Threads...";
 	for(unsigned int i = 0; i < threads.size(); i++)
 	{
 		threads[i]->attachThread(threads[i]);
@@ -73,8 +75,10 @@ const bool DiagnosticService::Init()
 	pollInit.push_back(tocker);
 
 	threads.push_back(ThreadList::Spawn(pollInit, pollPeriod));
+	StaticLogText()<<threads.size()<<" threads attached. Thread "<<(threads.size()-1)<<" is the polling thread";
 
 	state = ThreadList::RUNNING;
+
 	return true;
 }
 

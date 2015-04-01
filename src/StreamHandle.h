@@ -11,8 +11,6 @@
 #include <sstream>
 #include <string>
 
-#include "DiagnosticService.h"
-
 namespace DRR
 {
 

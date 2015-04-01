@@ -30,6 +30,16 @@ public:
 	virtual ~TextLogObject() {};
 
 public:
+	static const int StaticLogText(const string& message, const LEVEL_t &level=LEVEL_t::INFO)
+	{
+		return TextLog::Log(LogObjectBase<SERVICE>::GetName(), "", level);
+	}
+
+	static StreamHandle StaticLogText(const LEVEL_t &level=LEVEL_t::INFO)
+	{
+		return TextLog::Log(LogObjectBase<SERVICE>::GetName(), "", level);
+	}
+
 	const int LogText(const string& message, const LEVEL_t &level=LEVEL_t::INFO)
 	{
 		return TextLog::Log(this->GetName(), this->GetInstanceName(), message, level);

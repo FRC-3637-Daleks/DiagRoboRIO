@@ -89,31 +89,28 @@ const string LogService::GetRunTimePath()
 	return ret;
 }
 
-const int LogService::LogText(const string &service, const string &component, const string &message, const LEVEL_t &level)
+void LogService::InitTextLogging()
 {
 	if(text.GetThread() == nullptr)
 	{
 		if(preferences.text_log_filename != NULL)
 		{
-			text.AddService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
-			if(preferences.text_dashboard_feed != NULL)
+		text.AddService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
+		if(preferences.text_dashboard_feed != NULL)
 				text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
 		}
 	}
+}
+
+const int LogService::LogText(const string &service, const string &component, const string &message, const LEVEL_t &level)
+{
+	InitTextLogging();
 	return text.Log(service, component, message, level);
 }
 
 StreamHandle LogService::LogText(const string &service, const string &component, const LEVEL_t &level)
 {
-	if(text.GetThread() == nullptr)
-	{
-		if(preferences.text_log_filename != NULL)
-		{
-			text.AddService(GetRunTimePath()+preferences.text_log_filename, preferences.log_period);
-			if(preferences.text_dashboard_feed != NULL)
-				text.AddService(TextLogMQTT::Create(preferences.text_dashboard_feed));
-		}
-	}
+	InitTextLogging();
 	return text.Log(service, component, level);
 }
 
@@ -124,6 +121,7 @@ const int LogService::Start()
 	TextLog::SetFrameStamp(DiagnosticService::GetFramePoll());
 	if(!DiagnosticService::Init())
 		return -1;
+	//LogText("LogService", "")<<"Frame 0 Beginning at "<<DiagnosticService::GetTimeElapsed()<<"ms";
 	return 0;
 }
 

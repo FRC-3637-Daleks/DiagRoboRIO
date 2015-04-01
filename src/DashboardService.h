@@ -23,6 +23,9 @@ using std::weak_ptr;
 class DashboardService: public DiagnosticService, private TextLogObject<DashboardService>
 {
 private:
+	using TextLogObject<DashboardService>::LogText;
+
+private:
 	shared_ptr<DashboardPusher> pusher;
 	string path;
 

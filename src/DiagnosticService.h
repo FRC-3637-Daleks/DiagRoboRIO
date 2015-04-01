@@ -15,6 +15,7 @@
 #include "PollValue.h"
 #include "ThreadList.h"
 #include "FramePusher.h"
+#include "TextLogObject.h"
 
 
 namespace DRR
@@ -25,7 +26,7 @@ using std::unique_ptr;
 using std::shared_ptr;
 using std::thread;
 
-class DiagnosticService
+class DiagnosticService: private TextLogObject<DiagnosticService>
 {
 private:
 	static const long long Tick();	///< Returns an incrementing frame id

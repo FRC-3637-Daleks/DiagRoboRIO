@@ -42,12 +42,14 @@ void TextLogService::AddService(const shared_ptr<TextLog> &toInstall, const shar
 	}
 	else
 		textThread->AddToList(toPush);
+	Log("TextLogService", "0", LEVEL_t::INFO)<<"New TextLog target added";
 }
 
 void TextLogService::AddService(const string &file, const unsigned int mils)
 {
 	auto filePusher = TextLogFile::Create(file);
 	AddService(filePusher, filePusher, mils);
+	Log("TextLogService", "0", LEVEL_t::INFO)<<"New TextLog target added: "<<file;
 }
 
 const int TextLogService::Log(const string &service, const string &instance, const string &message, const LEVEL_t level)
