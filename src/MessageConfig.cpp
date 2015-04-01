@@ -23,8 +23,6 @@ MessageConfig::MessageConfig(const string &file): LogObject<MessageConfig>(file)
 void MessageConfig::SetValue(const string &key, const string &value)
 {
 	LogText()<<"Publishing \""<<key<<"\" = \""<<value<<"\"";
-	if(!HasValue(key))
-		AddVerifier(key, Verifier::read_only);
 	setValue(key, value);
 	Publish(key, value, true);
 }
@@ -121,6 +119,12 @@ const int MessageConfig::Message(const string &topic, const string &value)
 		}
 
 		Publish(SetCommandTopic(), "0", true);
+	}
+	else if(value != GetValue(topic))
+	{
+		LogText(LEVEL_t::ALERT)<<"Please use the \""<<SetCommandTopic()<<"\" topic to change values: ";
+		LogText(LEVEL_t::ALERT)<<"To do so set the topic \""<<(GetPath()+SetCommandTopic())<<"\" to \""<<topic<<" "<<value<<"\"";
+		Publish(topic, GetValue(topic), true);
 	}
 
 	return ret;

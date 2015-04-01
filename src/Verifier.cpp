@@ -12,6 +12,6 @@ namespace DRR
 
 const Verifier Verifier::do_nothing(&Verifier::DoNothing);
 const Verifier Verifier::read_only(&Verifier::ReadOnly);
-
+const Verifier Verifier::read_only_persist(&Verifier::ReadOnlyPersist);
 
 }

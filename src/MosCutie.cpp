@@ -40,7 +40,13 @@ MosCutie& MosCutie::GetInstance()
 const int MosCutie::Publish(const string &topic, const string& value, const bool retain)
 {
 	if(Has(topic))
-		subscriptions.at(topic).value = value;
+	{
+		if(subscriptions[topic].verify.Verify(value) != Verifier::PASS)
+		{
+			GetInstance().LogText(LEVEL_t::ALERT)<<"Cannot publish \""<<value<<"\" to \""<<topic<<"\" because it doesn't pass verification";
+			return -1;
+		}
+	}
 	return GetInstance().publish(NULL, ConvertTopic(topic).c_str(), value.size(), value.c_str(), 0, retain);
 }
 
@@ -69,7 +75,8 @@ const string MosCutie::Get(const string& topic, const bool sub)
 
 const bool MosCutie::AddVerifier(const string &topic, const Verifier &ver)
 {
-	subscriptions[topic].verify = ver;
+	auto &v = subscriptions[topic].verify;
+	v = Verifier::And(v, ver);
 	return true;
 }
 
@@ -151,12 +158,14 @@ void MosCutie::on_message(const mosquitto_message * message)
 	if(message->payload != NULL)
 		val = string((char *)message->payload, message->payloadlen);
 
-	if(subscriptions[message->topic].verify.Verify(val))
-		subscriptions[message->topic].value = val;
-	else if(subscriptions[message->topic].value != val)
+	auto &sub = subscriptions[message->topic];
+	auto verif = sub.verify.Verify(val);
+	if(verif == Verifier::PASS)
+		sub.value = val;
+	else if(sub.value != val)
 	{
 		LogText(LEVEL_t::ALERT)<<"The value \""<<val<<"\" does not pass the verification for the topic \""<<message->topic<<"\"";
-		Publish(message->topic, subscriptions[message->topic].value);
+		Publish(message->topic, sub.value, verif == Verifier::FAIL_PERSIST);
 		return;
 	}
 	string top = StripTopic(message->topic);

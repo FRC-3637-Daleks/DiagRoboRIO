@@ -20,28 +20,57 @@ using std::string;
 class Verifier
 {
 public:
-	typedef std::function<const bool(const string&)> CHECK_t;
+	typedef enum {PASS=0, FAIL, FAIL_PERSIST} VERIFY_t;
+	typedef std::function<const VERIFY_t(const string&)> CHECK_t;
 
 private:
-	static const bool DoNothing(const string &in) {return true;};
-	static const bool ReadOnly(const string &in) {return false;};
+	static const VERIFY_t DoNothing(const string &in) {return PASS;};
+	static const VERIFY_t ReadOnly(const string &in) {return FAIL;};
+	static const VERIFY_t ReadOnlyPersist(const string &in) {return FAIL_PERSIST;};
 
 public:
 	static const Verifier do_nothing;
 	static const Verifier read_only;
+	static const Verifier read_only_persist;
 
 	template<typename T>
-	static const Verifier Convert(const std::function<const bool(const T&)> &chk)
+	static const Verifier Convert(const std::function<const VERIFY_t(const T&)> &chk, const VERIFY_t onTypeFailure=FAIL_PERSIST)
 	{
-		return Verifier([chk](const string& value)
+		return Verifier([chk, onTypeFailure](const string& value)
 			{
 				std::stringstream ss;
 				ss<<value;
 				T val;
 				ss>>val;
 				if(ss.fail())
-					return false;
+					return onTypeFailure;
 				return chk(val);
+			});
+	}
+
+	static const Verifier And(const Verifier& a, const Verifier& b)
+	{
+		return Verifier([a, b](const string &value)
+			{
+				VERIFY_t va = a.Verify(value), vb = b.Verify(value);
+				if(va == FAIL_PERSIST || vb == FAIL_PERSIST)
+					return FAIL_PERSIST;
+				if(va == FAIL || vb == FAIL)
+					return FAIL;
+				return PASS;
+			});
+	}
+
+	static const Verifier Or(const Verifier& a, const Verifier& b)
+	{
+		return Verifier([a, b](const string &value)
+			{
+				VERIFY_t va = a.Verify(value), vb = b.Verify(value);
+				if(va == PASS || vb == PASS)
+					return PASS;
+				if(va == FAIL_PERSIST || vb == FAIL_PERSIST)
+					return FAIL_PERSIST;
+				return FAIL;
 			});
 	}
 
@@ -51,18 +80,13 @@ private:
 public:
 	Verifier(): check(&Verifier::DoNothing) {};
 	Verifier(const CHECK_t &fn): check(fn) {};
-
-	/*template<typename T>
-	Verifier(const std::function<const bool(const T&)> &fn): check(std::bind(&Verifier::Convert<T>, std::placeholders::_1, fn)) {};
-	*/
-
 	Verifier(const Verifier& other): check(other.check) {};
 
 public:
 	virtual ~Verifier() {};
 
 public:
-	const bool Verify(const string& val) {return check(val);};
+	const VERIFY_t Verify(const string& val) const {return check(val);};
 };
 
 
