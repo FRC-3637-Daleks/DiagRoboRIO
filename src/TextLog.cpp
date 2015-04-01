@@ -16,14 +16,14 @@ namespace DRR
 
 
 const char * LEVEL_t::text[] = {
-		[EMER] = "EMER",
+		[INIT] = "INIT",
+		[INVALID] = "INVALID",
 		[ALERT] = "ALERT",
 		[CRIT] = "CRIT",
-		[ERR] = "ERR",
-		[WARN] = "WARN",
-		[NOTICE] = "NOTICE",
 		[INFO] = "INFO",
-		[DEBUG] = "DEBUG"
+		[DEBUG0] = "DEBUG0",
+		[DEBUG1] = "DEBUG1",
+		[DEBUG2] = "DEBUG2"
 };
 
 

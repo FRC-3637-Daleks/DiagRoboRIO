@@ -23,7 +23,7 @@ class TextLog;
 
 class LEVEL_t {
 public:
-	enum {EMER=0, ALERT, CRIT, ERR, WARN, NOTICE, INFO, DEBUG, NUM_LEVELS};
+	enum {INIT=0, INVALID, ALERT, CRIT, INFO, DEBUG0, DEBUG1, DEBUG2, NUM_LEVELS};
 	static const char* text[NUM_LEVELS];
 
 private:

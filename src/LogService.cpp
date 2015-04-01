@@ -121,7 +121,7 @@ const int LogService::Start()
 	TextLog::SetFrameStamp(DiagnosticService::GetFramePoll());
 	if(!DiagnosticService::Init())
 		return -1;
-	//LogText("LogService", "")<<"Frame 0 Beginning at "<<DiagnosticService::GetTimeElapsed()<<"ms";
+	LogText("LogService", "")<<"Frame 0 Beginning at "<<DiagnosticService::GetTimeElapsed()<<"ms";
 	return 0;
 }
 

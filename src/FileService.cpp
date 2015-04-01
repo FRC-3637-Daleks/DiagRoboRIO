@@ -25,7 +25,7 @@ void FileService::SetMatrix(const shared_ptr<FileMatrix>& mat)
 		return;
 	Add("log/frame_number", &DiagnosticService::GetCurrentFrame);
 	Add("log/milliseconds", &DiagnosticService::GetTimeElapsed);
-	LogText()<<"FileMatrix set to push data to "<<matrix->GetFileName();
+	LogText(LEVEL_t::INIT)<<"FileMatrix set to push data to "<<matrix->GetFileName();
 }
 
 }

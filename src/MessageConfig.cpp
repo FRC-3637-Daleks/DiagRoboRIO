@@ -12,17 +12,17 @@ namespace DRR
 
 MessageConfig::MessageConfig(const string &file): LogObject<MessageConfig>(file), MosCutieListener(string("roborio/config/")+file), ConfigFile(file)
 {
-	LogText()<<"Created MessageConfig for "<<file;
+	LogText(LEVEL_t::INIT)<<"Created MessageConfig for "<<file;
 	Publish(SaveCommandTopic(), "0", true);
 	Publish(RevertCommandTopic(), "0", true);
 	Publish(SetCommandTopic(), "0", true);
 	Reload();
-	LogText()<<"Constructor Complete";
+	LogText(LEVEL_t::INIT)<<"Constructor Complete";
 }
 
 void MessageConfig::SetValue(const string &key, const string &value)
 {
-	LogText()<<"Publishing \""<<key<<"\" = \""<<value<<"\"";
+	LogText(LEVEL_t::DEBUG0)<<"Publishing \""<<key<<"\" = \""<<value<<"\"";
 	setValue(key, value);
 	Publish(key, value, true);
 }
@@ -31,11 +31,11 @@ void MessageConfig::RemoveValue(const string &key)
 {
 	if(!HasValue(key))
 	{
-		LogText()<<"Cannot remove \""<<key<<"\" because it does not exist";
+		LogText(LEVEL_t::INVALID)<<"Cannot remove \""<<key<<"\" because it does not exist";
 	}
 	else
 	{
-		LogText()<<"Removing \""<<key<<"\" from global table";
+		LogText(LEVEL_t::DEBUG0)<<"Removing \""<<key<<"\" from global table";
 		removeValue(key);
 		Publish(key, "", true);
 	}
@@ -43,7 +43,7 @@ void MessageConfig::RemoveValue(const string &key)
 
 const int MessageConfig::Message(const string &topic, const string &value)
 {
-	LogText()<<"Received message \""<<topic<<"\"=\""<<value<<"\"";
+	LogText(LEVEL_t::DEBUG1)<<"Received message \""<<topic<<"\"=\""<<value<<"\"";
 	int ret = 0;
 	if(topic == SaveCommandTopic())
 	{
@@ -98,7 +98,7 @@ const int MessageConfig::Message(const string &topic, const string &value)
 		if(value == "0")
 			return 0;
 
-		LogText()<<"Received request: "<<value;
+		LogText(LEVEL_t::DEBUG0)<<"Received request: "<<value;
 
 		auto split = value.find(' ');
 		if(split != value.npos)
@@ -107,14 +107,14 @@ const int MessageConfig::Message(const string &topic, const string &value)
 			string setValue(value, split+1);
 
 			if(!HasValue(setTopic))
-				LogText(LEVEL_t::NOTICE)<<"Adding \""<<setTopic<<"\"";
-			LogText()<<"Setting \""<<setTopic<<"\" to \""<<setValue<<"\"";
+				LogText(LEVEL_t::DEBUG0)<<"Adding \""<<setTopic<<"\"";
+			LogText(LEVEL_t::DEBUG1)<<"Setting \""<<setTopic<<"\" to \""<<setValue<<"\"";
 			SetValue(setTopic, setValue);
 		}
 		else if(split == value.npos)
 		{
 			string removeTopic(value);
-			LogText()<<"Removing \""<<removeTopic<<"\"";
+			LogText(LEVEL_t::DEBUG2)<<"Removing \""<<removeTopic<<"\"";
 			RemoveValue(removeTopic);
 		}
 
@@ -122,7 +122,7 @@ const int MessageConfig::Message(const string &topic, const string &value)
 	}
 	else if(value != GetValue(topic))
 	{
-		LogText(LEVEL_t::ALERT)<<"Please use the \""<<SetCommandTopic()<<"\" topic to change values: ";
+		LogText(LEVEL_t::INVALID)<<"Changed config value directly. Please use the \""<<SetCommandTopic()<<"\" topic to change values: ";
 		LogText(LEVEL_t::ALERT)<<"To do so set the topic \""<<(GetPath()+SetCommandTopic())<<"\" to \""<<topic<<" "<<value<<"\"";
 		Publish(topic, GetValue(topic), true);
 	}

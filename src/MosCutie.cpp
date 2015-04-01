@@ -128,10 +128,10 @@ MosCutie::MosCutie(const char * const host, const int timeout): mosquittopp()
 void MosCutie::on_connect(int rc)
 {
 	if(rc)
-		LogText(LEVEL_t::NOTICE)<<"MQTT Fail on connect";
+		LogText(LEVEL_t::CRIT)<<"MQTT Fail on connect";
 	else
 	{
-		LogText(LEVEL_t::NOTICE)<<"MQTT Success on connect";
+		LogText(LEVEL_t::INIT)<<"MQTT Success on connect";
 		for(auto i = subscriptions.begin(); i != subscriptions.end(); i++)
 		{
 			Publish(i->first, i->second.value);
@@ -142,9 +142,9 @@ void MosCutie::on_connect(int rc)
 void MosCutie::on_disconnect(int rc)
 {
 	if(rc)
-		LogText(LEVEL_t::NOTICE)<<"MQTT Fail on disconnect";
+		LogText(LEVEL_t::CRIT)<<"MQTT Fail on disconnect";
 	else
-		LogText(LEVEL_t::NOTICE)<<"MQTT Success on disconnect";
+		LogText(LEVEL_t::INFO)<<"MQTT Success on disconnect";
 }
 
 void MosCutie::on_message(const mosquitto_message * message)

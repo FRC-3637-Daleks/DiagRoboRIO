@@ -33,7 +33,7 @@ void DiagnosticService::Monitor()
 
 	for(unsigned int i = 0; i < threads.size(); i++)
 	{
-		StaticLogText()<<"Starting thread "<<i;
+		StaticLogText(LEVEL_t::INIT)<<"Starting thread "<<i;
 		threads[i]->Start();
 	}
 
@@ -65,7 +65,7 @@ const bool DiagnosticService::Init()
 	if(IsInitialized())
 		return false;
 
-	StaticLogText()<<"Starting Threads...";
+	StaticLogText(LEVEL_t::INIT)<<"Starting Threads...";
 	for(unsigned int i = 0; i < threads.size(); i++)
 	{
 		threads[i]->attachThread(threads[i]);
@@ -75,7 +75,7 @@ const bool DiagnosticService::Init()
 	pollInit.push_back(tocker);
 
 	threads.push_back(ThreadList::Spawn(pollInit, pollPeriod));
-	StaticLogText()<<threads.size()<<" threads attached. Thread "<<(threads.size()-1)<<" is the polling thread";
+	StaticLogText(LEVEL_t::INIT)<<threads.size()<<" threads attached. Thread "<<(threads.size()-1)<<" is the polling thread";
 
 	state = ThreadList::RUNNING;
 
