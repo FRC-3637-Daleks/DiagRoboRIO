@@ -20,3 +20,7 @@ sysProps.xml
 doc/
 
 src/Hardware.h
+CMakeCache.txt
+CMakeFiles/
+Makefile
+cmake_install.cmake
