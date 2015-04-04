@@ -53,6 +53,10 @@ public:
 	static const string GetRunTimePath();
 
 private:
+	static const string GetDashRoot() {return dashboard.GetPath();};
+	static void SetDashRoot(const string &root) {dashboard.SetPath(root);};
+
+private:
 	template<typename T>
 	static const int addLog(const string &service, const string &component, const std::function<T(void)> fn, const int dashData=-1);
 
@@ -80,7 +84,11 @@ inline const int LogService::addLog(const string &service, const string &compone
 	if(dashData >= 0)
 	{
 		if(dashboard.GetPusher() == nullptr)
+		{
+			LogText("LogService", "", LEVEL_t::INIT)<<"Configuring DashboardService with root: "<<preferences.dashboard_root;
+			dashboard.SetPath(preferences.dashboard_root);
 			dashboard.SetPusher(preferences.dash_fact(preferences.dash_period));
+		}
 		dashboard.Add(MakeKey(service, component), weak_ptr<PollValue<T>>(poll), dashData);
 	}
 

@@ -30,7 +30,7 @@ private:
 	string path;
 
 public:
-	DashboardService(const shared_ptr<DashboardPusher>& push, const string& p = string("roborio")):
+	DashboardService(const shared_ptr<DashboardPusher>& push, const string& p = string("")):
 		TextLogObject<DashboardService>(p), pusher(push), path(p)
 	{
 		LogText(LEVEL_t::INIT)<<"Created for path: "<<path;
@@ -40,6 +40,10 @@ public:
 
 public:
 	virtual ~DashboardService() {LogText("Destroying");};
+
+public:
+	const string GetPath() const {return path;};
+	void SetPath(const string& p) {path = p;};
 
 public:
 	void SetPusher(const shared_ptr<DashboardPusher>& push)
