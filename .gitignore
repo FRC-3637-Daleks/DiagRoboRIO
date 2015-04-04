@@ -16,6 +16,8 @@ sysProps.xml
 .externalToolBuilders/
 
 *.launch
+*.a
+*.dll
 
 doc/
 
