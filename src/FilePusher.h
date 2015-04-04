@@ -35,7 +35,7 @@ private:
 	bool flip;
 
 public:
-	FilePusher(const string& filename): name(filename), output(std::make_unique<ofstream>(filename)), doubleBuffer(new stringstream[2]), flip(0) {std::cout<<"Opening "<<filename<<std::endl;};
+	FilePusher(const string& filename): name(filename), output(new ofstream(filename)), doubleBuffer(new stringstream[2]), flip(0) {std::cout<<"Opening "<<filename<<std::endl;};
 	FilePusher(FilePusher&& other);
 
 public:
