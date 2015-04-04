@@ -62,6 +62,9 @@ private:
 
 public:
 	template<typename T>
+	static const int AddBindedLog(const string &service, const string &component, const std::function<T(void)> fn, const int dashData=-1);
+
+	template<typename T>
 	static const int AddLog(const string &service, const string &componenet, T (* const fn)(), const int dashData=-1);
 
 	template<typename T, class SERVICE>
@@ -93,6 +96,12 @@ inline const int LogService::addLog(const string &service, const string &compone
 	}
 
 	return 0;
+}
+
+template<typename T>
+inline const int LogService::AddBindedLog(const string &service, const string &component, const std::function<T(void)> fn, const int dashData)
+{
+	return addLog<T>(service, component, fn, dashData);
 }
 
 template<typename T>
