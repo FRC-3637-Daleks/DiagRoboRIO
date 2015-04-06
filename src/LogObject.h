@@ -45,13 +45,13 @@ public:
 	template<typename T>
 	static const int StaticAddLog(const string &component, const std::function<T()> &fn, const int dashData=-1)
 	{
-		return LogService::AddLog(LogObjectBase<SERVICE>::GetName(), component, fn, dashData);
+		return LogService::AddLog<T>(LogObjectBase<SERVICE>::GetName(), component, fn, dashData);
 	}
 
 	template<typename T>
 	const int AddLog(const string &component, T (SERVICE::*fn)(), const int dashData=-1)
 	{
-		return LogService::AddLog(LogService::MakeKey(this->GetInstanceName(), component), fn, this->GetSelf(), dashData);
+		return LogService::AddLog<T>(LogService::MakeKey(this->GetInstanceName(), component), fn, this->GetSelf(), dashData);
 	}
 
 	/*
@@ -65,8 +65,9 @@ public:
 	template<typename T>
 	const int AddLog(const string &component, const std::function<T()> &fn, const int dashData=-1)
 	{
-		return LogService::AddLog(this->GetName(), LogService::MakeKey(this->GetInstanceName(), component), fn, dashData);
+		return LogService::AddBindedLog<T>(this->GetName(), LogService::MakeKey(this->GetInstanceName(), component), fn, dashData);
 	}
+
 
 };
 
